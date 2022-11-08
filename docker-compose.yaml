@@ -1,10 +1,10 @@
 services:
-  ffc-template-node:
+  ffc-pay-statement-receiver:
     build:
       context: .
       target: production
-    image: ffc-template-node
-    container_name: ffc-template-node
+    image: ffc-pay-statement-receiver
+    container_name: ffc-pay-statement-receiver
     environment:
-      APPINSIGHTS_CLOUDROLE: ffc-template-node-local
+      APPINSIGHTS_CLOUDROLE: ffc-pay-statement-receiver-local
       APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}

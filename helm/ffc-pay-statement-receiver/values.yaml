@@ -1,8 +1,8 @@
 environment: production
 environmentCode:
-name: ffc-template-node
-namespace: ffc-demo
-image: ffc-template-node
+name: ffc-pay-statement-receiver
+namespace: ffc-pay
+image: ffc-pay-statement-receiver
 
 labels:
   component: service
@@ -11,10 +11,10 @@ appInsights:
   key:
 
 containerConfigMap:
-  name: ffc-template-node-config-map
+  name: ffc-pay-statement-receiver-config-map
 
 containerSecret:
-  name: ffc-template-node-container-secret
+  name: ffc-pay-statement-receiver-container-secret
   type: Opaque
 
 deployment: {}
