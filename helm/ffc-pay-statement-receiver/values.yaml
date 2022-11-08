@@ -2,6 +2,7 @@ environment: production
 environmentCode:
 name: ffc-pay-statement-receiver
 namespace: ffc-pay
+workstream: ffc-pay
 image: ffc-pay-statement-receiver
 
 labels:
