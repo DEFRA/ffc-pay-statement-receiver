@@ -8,3 +8,5 @@ services:
     environment:
       APPINSIGHTS_CLOUDROLE: ffc-pay-statement-receiver-local
       APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}
+      REDIS_HOST: a
+      REDIS_PASSWORD: a
