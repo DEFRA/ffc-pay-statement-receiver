@@ -9,7 +9,7 @@ services:
       APPINSIGHTS_CLOUDROLE: ffc-pay-statement-receiver-local
       APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}
       REDIS_HOST: ffc-pay-statement-receiver-redis
-      REDIS_PASSWORD: undefined
+      REDIS_PASSWORD: redis
 
   ffc-pay-statement-receiver-redis:
     image: redis:6.2.7
