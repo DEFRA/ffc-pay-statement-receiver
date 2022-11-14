@@ -16,6 +16,9 @@ const server = Hapi.server({
   }]
 })
 
+const cache = server.cache({ cache: config.cacheName, segment: 'st', expiresIn: 9999 })
+server.app.cache = cache
+
 const routes = [].concat(
   require('./routes/healthy'),
   require('./routes/healthz')

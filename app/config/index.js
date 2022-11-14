@@ -25,7 +25,8 @@ value.isDev = (value.env === 'development' || value.env === 'test')
 value.isTest = value.env === 'test'
 value.isProd = value.env === 'production'
 
-value.useRedis = !value.isTest && value.redisHost !== undefined
+// value.useRedis = !value.isTest && value.redisHost !== undefined
+value.useRedis = true
 // value.useRedis = !(value.isTest || value.redisHost === undefined)
 
 if (!value.useRedis) {

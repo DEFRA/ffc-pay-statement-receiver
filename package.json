@@ -19,8 +19,10 @@
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
+    "@hapi/catbox-redis": "6.0.2",
     "@hapi/hapi": "20.2.2",
-    "applicationinsights": "2.3.5"
+    "applicationinsights": "2.3.5",
+    "joi": "17.7.0"
   },
   "devDependencies": {
     "jest": "29.2.2",
