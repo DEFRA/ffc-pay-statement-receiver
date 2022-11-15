@@ -26,8 +26,9 @@ container:
   limitMemory: 100Mi
   limitCpu: 100m
   port: 3000
-  redisHostname: SNDFFCINFRE1001.redis.cache.windows.net
+  redisHostname: hostymchostface
   redisPort: 6380
+  redisPassword: redis
 
 livenessProbe:
   path: /healthz
