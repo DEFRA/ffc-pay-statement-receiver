@@ -4,6 +4,6 @@ data:
   NODE_ENV: {{ quote .Values.environment }}
   PORT: {{ quote .Values.container.port }}
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
-  REDIS_HOST: {{ quote .Values.container.redisHost }}
+  REDIS_HOST: {{ quote .Values.container.redisHostname }}
   REDIS_PORT: {{ quote .Values.container.redisPort }}
 {{- end -}}
