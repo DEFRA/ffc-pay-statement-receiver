@@ -36,7 +36,7 @@ if (!value.useRedis) {
 value.cache = cacheConfig
 value.catboxOptions = {
   ...cacheConfig.catboxOptions,
-  tls: value.isProd ? {} : undefined
+  tls: value.isProd ? undefined : undefined
 }
 
 module.exports = value
