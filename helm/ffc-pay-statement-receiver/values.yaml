@@ -27,7 +27,7 @@ container:
   limitCpu: 100m
   port: 3000
   redisHost: hostymchostface
-  redisPort: 6380
+  redisPort: 9999
   redisPassword: redis
 
 livenessProbe:
