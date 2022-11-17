@@ -14,7 +14,7 @@ const get = async (request) => {
 
 const set = async (request, value) => {
   console.log('Populating cache key: Web')
-  await request.server.app.cache.set('Web', value)
+  await request.server.app.cache.set('Web', value, 99999)
 }
 
 module.exports = {
