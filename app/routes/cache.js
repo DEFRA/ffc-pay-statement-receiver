@@ -4,8 +4,8 @@ module.exports = [{
   method: 'GET',
   path: '/get',
   handler: async (request, h) => {
-    await cache.get(request)
-    return h.response('ok').code(200)
+    const res = await cache.get(request)
+    return h.response(res).code(200)
   }
 },
 {

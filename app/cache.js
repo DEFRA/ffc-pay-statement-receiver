@@ -1,8 +1,15 @@
-const get = async (request) => {
+const getCache = async (request) => {
   console.log('Getting cache key: Web')
   const res = await request.server.app.cache.get('Web')
-  console.log('Result:', res)
   return res
+}
+
+const get = async (request) => {
+  const res = await getCache(request)
+  if (res) {
+    console.log('Using existing cache value')
+    return res
+  }
 }
 
 const set = async (request, value) => {
