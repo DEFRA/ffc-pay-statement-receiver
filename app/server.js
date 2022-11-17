@@ -5,15 +5,13 @@ const catbox = config.useRedis ? require('@hapi/catbox-redis') : require('@hapi/
 
 require('./insights').setup()
 
-console.log(config.catboxOptions)
-
 const server = Hapi.server({
   port: process.env.PORT,
   cache: [{
     name: config.cache.cacheName,
     provider: {
       constructor: catbox,
-      options: { ...config.catboxOptions, port: 6379, db: 0 }
+      options: { ...config.catboxOptions, port: 6379 }
     }
   }]
 })

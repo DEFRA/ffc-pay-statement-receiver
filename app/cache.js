@@ -2,6 +2,7 @@ const getCache = async (request) => {
   console.log('Getting cache key: Web')
   console.log(request)
   const res = await request.server.app.cache.get('Web')
+  console.log('Cache: ', request.server.app.cache)
   return res
 }
 
