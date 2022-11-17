@@ -5,6 +5,14 @@ services:
       target: production
     image: ffc-pay-statement-receiver
     container_name: ffc-pay-statement-receiver
+    depends_on:
+      - ffc-pay-statement-azurite
     environment:
       APPINSIGHTS_CLOUDROLE: ffc-pay-statement-receiver-local
       APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}
+      AZURE_STORAGE_ACCOUNT_NAME: ${AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
+      AZURE_STORAGE_USE_CONNECTION_STRING: "true"
+      STATEMENTS_RECEIVER_ENDPOINT: http://ffc-pay-statement-receiver:3000
+  ffc-pay-statement-azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.17.1
+    command: "azurite-blob --loose --blobHost 0.0.0.0"

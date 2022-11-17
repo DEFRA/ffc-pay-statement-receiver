@@ -1,5 +1,5 @@
 const server = require('./server')
-
+// const { initialiseContainers } = require('./storage')
 const init = async () => {
   await server.start()
   console.log('Server running on %s', server.info.uri)
@@ -10,4 +10,8 @@ process.on('unhandledRejection', (err) => {
   process.exit(1)
 })
 
-init()
+
+module.exports = (async () => {
+  // initialiseContainers()
+  init()
+})()
