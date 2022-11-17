@@ -14,15 +14,13 @@ const schema = Joi.object({
 })
 
 const config = {
-  host: process.env.REDIS_HOST,
+  host: process.env.REDIS_HOSTNAME,
   port: process.env.REDIS_PORT,
   password: process.env.REDIS_PASSWORD,
   partition: process.env.REDIS_PARTITION,
   ttl: process.env.REDIS_TTL,
   cacheName: process.env.REDIS_CACHE_NAME
 }
-
-console.log(config)
 
 const result = schema.validate(config, {
   abortEarly: false
