@@ -22,6 +22,8 @@ const config = {
   cacheName: process.env.REDIS_CACHE_NAME
 }
 
+console.log(config)
+
 const result = schema.validate(config, {
   abortEarly: false
 })
