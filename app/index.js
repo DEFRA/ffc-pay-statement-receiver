@@ -5,9 +5,9 @@ const init = async () => {
   console.log('Server running on %s', server.info.uri)
 
   console.log('caching...')
-  server.app.cache.set('willThisWork', 'dwdssfsf')
+  await server.app.cache.set('willThisWork', 'dwdssfsf')
   console.log('set')
-  const res = server.app.cache.get('willThisWork')
+  const res = await server.app.cache.get('willThisWork')
   console.log('cache res', res)
 }
 
