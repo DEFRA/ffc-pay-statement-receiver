@@ -1,13 +1,13 @@
 const Joi = require('joi')
 
-const TTL = 3600 * 1000 * 6 // 6 hours
+const TTL = 1000 * 60 * 60 * 6 // 6 hours
 
 const schema = Joi.object({
   host: Joi.string(),
   port: Joi.number().integer().default(6379),
   password: Joi.string().allow(''),
   partition: Joi.string().default('ffc-pay-statement-receiver'),
-  ttl: Joi.number().default(TTL),
+  ttl: Joi.number().integer().default(TTL),
   cacheName: Joi.string().default('statements')
 //   staticCacheTimeoutMillis: Joi.number().default(15 * 60 * 1000),
 //   restClientTimeoutMillis: Joi.number().default(20000),
