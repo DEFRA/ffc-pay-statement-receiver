@@ -2,7 +2,7 @@ const { DefaultAzureCredential } = require('@azure/identity')
 const { BlobServiceClient } = require('@azure/storage-blob')
 const config = require('./config').storageConfig
 let blobServiceClient
-let containersInitialised
+// let containersInitialised
 
 if (config.useConnectionStr) {
   console.log('Using connection string for BlobServiceClient')
@@ -21,7 +21,7 @@ const initialiseContainers = async () => {
     await container.createIfNotExists()
   }
   await initialiseFolders()
-  containersInitialised = true
+  // containersInitialised = true
 }
 
 const initialiseFolders = async () => {
@@ -43,11 +43,11 @@ const getFile = async (filename) => {
 }
 const getFileStream = async (filename) => {
   const blob = await getBlob(filename)
-  try{
+  try {
     return await blob.download(0)
   } catch (err) {
     console.log(err)
-    throw new Error(`File does not exist`)
+    throw new Error('File does not exist')
   }
 }
 
