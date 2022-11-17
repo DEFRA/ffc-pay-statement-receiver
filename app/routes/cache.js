@@ -4,8 +4,7 @@ module.exports = [{
   method: 'GET',
   path: '/get',
   handler: async (request, h) => {
-    const statement = await cache.get(request) ?? undefined
-    console.log(statement)
+    await cache.get(request)
     return h.response('ok').code(200)
   }
 },
@@ -13,7 +12,7 @@ module.exports = [{
   method: 'GET',
   path: '/set',
   handler: async (request, h) => {
-    await cache.set(request, 'fbsdfsfw')
+    await cache.set(request, `Value gotten from web get with timestamp: ${new Date().toString()}`)
     return h.response('ok').code(200)
   }
 }]
