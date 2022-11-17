@@ -3,6 +3,7 @@ const getCache = async (request) => {
   console.log(request)
   const res = await request.server.app.cache.get('Web')
   console.log('Cache: ', request.server.app.cache)
+  console.log('Settings: ', request.server.app.cache._cache.connection.settings)
   return res
 }
 
