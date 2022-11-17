@@ -1,8 +1,6 @@
-const util = require('util')
-
 const getCache = async (request) => {
   console.log('Getting cache key: Web')
-  console.log(util.inspect(request, false, null, true))
+  console.log(request)
   const res = await request.server.app.cache.get('Web')
   return res
 }
