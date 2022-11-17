@@ -32,7 +32,7 @@ container:
 
 ingress:
   class: nginx
-  endpoint: ffc-pay-statement-receiever
+  endpoint: ffc-pay-statement-receiver
   server: example.com
 
 livenessProbe:
