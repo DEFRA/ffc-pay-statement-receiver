@@ -30,6 +30,11 @@ container:
   redisPort: 9999
   redisPassword: redis
 
+ingress:
+  class: nginx
+  endpoint: ffc-pr-calculator
+  server: example.com
+
 livenessProbe:
   path: /healthz
   port: 3000
