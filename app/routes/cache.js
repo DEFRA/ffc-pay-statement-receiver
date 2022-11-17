@@ -3,7 +3,7 @@ const cache = require('../cache')
 module.exports = [{
   method: 'GET',
   path: '/get',
-  handler: (request, h) => {
+  handler: async (request, h) => {
     const statement = await cache.get(request) ?? undefined
     console.log(statement)
     return h.response('ok').code(200)
@@ -12,7 +12,7 @@ module.exports = [{
 {
   method: 'GET',
   path: '/set',
-  handler: (request, h) => {
+  handler: async (request, h) => {
     await cache.set(request, 'fbsdfsfw')
     return h.response('ok').code(200)
   }
