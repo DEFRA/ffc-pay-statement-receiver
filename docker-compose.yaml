@@ -5,6 +5,8 @@ services:
       target: development
     image: ffc-pay-statement-receiver
     container_name: ffc-pay-statement-receiver
+    depends_on:
+      - ffc-pay-statement-receiver-redis
     environment:
       APPINSIGHTS_CLOUDROLE: ffc-pay-statement-receiver-local
       APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}

@@ -7,7 +7,6 @@ jest.mock('../../../app/cache/get-cache-value')
 const getCacheValue = require('../../../app/cache/get-cache-value')
 
 const key = 'Key'
-// const value = 'Value'
 
 let request
 

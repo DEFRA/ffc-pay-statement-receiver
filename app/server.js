@@ -1,6 +1,5 @@
-const config = require('./config')
-
 const Hapi = require('@hapi/hapi')
+const config = require('./config')
 const catbox = config.useRedis ? require('@hapi/catbox-redis') : require('@hapi/catbox-memory')
 
 require('./insights').setup()
