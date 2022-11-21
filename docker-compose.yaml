@@ -16,3 +16,6 @@ services:
   ffc-pay-statement-azurite:
     image: mcr.microsoft.com/azure-storage/azurite:3.17.1
     command: "azurite-blob --loose --blobHost 0.0.0.0"
+    labels:
+      com.docker.compose.pay.role: ffc-pay-statement-azurite
+      

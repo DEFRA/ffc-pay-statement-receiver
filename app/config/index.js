@@ -4,13 +4,15 @@ const storageConfig = require('./storage')
 // Define config schema
 const schema = joi.object({
   env: joi.string().valid('development', 'test', 'production').default('development'),
-  statementsEndpoint: joi.string().uri().required()
+  statementsEndpoint: joi.string().uri().required(),
+  ffcApiPath: joi.string().uri().required()
 })
 
 // Build config
 const config = {
   env: process.env.NODE_ENV,
-  statementsEndpoint: process.env.STATEMENTS_RECEIVER_ENDPOINT
+  statementsEndpoint: process.env.STATEMENTS_RECEIVER_ENDPOINT,
+  ffcApiPath: process.env.FFC_API_PATH
 }
 
 // Validate config

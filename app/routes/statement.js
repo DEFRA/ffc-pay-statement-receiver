@@ -5,15 +5,18 @@ module.exports = {
   path: '/FfcApi/statement',
   handler: async (request, h) => {
     const filename = request.query.filename
-
     if (!filename) {
       return h.response('no_filename').code(404)
     }
 
     try {
       const statementFile = await getFileStream(filename)
-      console.log(statementFile.length)
-      return h.response('staement here').code(200)
+      return h.response(statementFile.readableStreamBody)
+            .type('application/pdf')
+            .header('Connection', 'keep-alive')
+            .header('Cache-Control', 'no-cache')
+            .header('Content-Disposition', `attachment;filename=${filename}`)
+            .code(200)
     } catch (err) {
       return h.response(err.message).code(404)
     }
