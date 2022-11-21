@@ -1,6 +1,10 @@
 const getCacheValue = async (cache, key) => {
   console.log(`Getting cache value for key: ${key}`)
-  return cache.get(key)
+  try {
+    return await cache.get(key)
+  } catch (err) {
+    return undefined
+  }
 }
 
 module.exports = getCacheValue
