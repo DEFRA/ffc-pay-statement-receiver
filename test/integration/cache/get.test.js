@@ -36,10 +36,10 @@ describe('get cache', () => {
     expect(result).toBe(value)
   })
 
-  test('GET /get route should return undefined when non-matching cache key is given', async () => {
+  test('GET /get route should return "mock read through cache method to be created and called" when non-matching cache key is given', async () => {
     key = 'Key name not in cache'
     const result = await get(request, key)
-    expect(result).toBeUndefined()
+    expect(result).toBe('mock read through cache method to be created and called')
   })
 
   test('GET /get route should return undefined when null cache key is given', async () => {

@@ -3,7 +3,7 @@ const getCacheValue = async (cache, key) => {
   try {
     return await cache.get(key)
   } catch (err) {
-    return undefined
+    throw new Error(`No cache value for key: ${key}`)
   }
 }
 

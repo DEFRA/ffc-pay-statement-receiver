@@ -1,6 +1,7 @@
-const { get, set } = require('../../../app/cache')
-
+const config = require('../../../app/config')
 const server = require('../../../app/server')
+
+const { get, set } = require('../../../app/cache')
 
 let key
 let value
@@ -85,7 +86,7 @@ describe('set cache', () => {
     await set(request, key, value)
 
     const result = await get(request, key)
-    expect(result).toBeUndefined()
+    expect(result).toBe('mock read through cache method to be created and called')
   })
 
   test('GET /set route should not populate cache with false value', async () => {
@@ -94,6 +95,19 @@ describe('set cache', () => {
     await set(request, key, value)
 
     const result = await get(request, key)
-    expect(result).toBeUndefined()
+    expect(result).toBe('mock read through cache method to be created and called')
+  })
+
+  test('GET /set route should have cache value expire after config.cache.ttl has passed', async () => {
+    await set(request, key, value)
+
+    const beforeTtlTimeout = await get(request, key)
+
+    jest.useFakeTimers()
+    jest.setSystemTime(new Date(new Date().getTime() + config.cache.ttl + 999))
+    const afterTtlTimeout = await get(request, key)
+
+    expect(beforeTtlTimeout).toBeDefined()
+    expect(afterTtlTimeout).toBe('mock read through cache method to be created and called')
   })
 })

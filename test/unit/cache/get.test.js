@@ -1,17 +1,16 @@
-const { get } = require('../../../app/cache')
-
 jest.mock('../../../app/cache/get-cache')
 const getCache = require('../../../app/cache/get-cache')
 
 jest.mock('../../../app/cache/get-cache-value')
 const getCacheValue = require('../../../app/cache/get-cache-value')
 
+const { get } = require('../../../app/cache')
+
 const key = 'Key'
 
 let request
 
 beforeEach(async () => {
-  // clear cache
   request = { server: { app: { cache: 1 } } }
 
   getCache.mockReturnValue(1)
@@ -20,10 +19,6 @@ beforeEach(async () => {
 
 afterEach(async () => {
   jest.resetAllMocks()
-})
-
-afterAll(async () => {
-  // clear cache
 })
 
 describe('get cache', () => {
@@ -62,69 +57,21 @@ describe('get cache', () => {
     expect(result).toStrictEqual((await getCacheValue()))
   })
 
-  test('should return undefined when getCacheValue returns null', async () => {
+  test('should return "mock read through cache method to be created and called" when getCacheValue returns null', async () => {
     getCacheValue.mockResolvedValue(null)
     const result = await get(request, key)
-    expect(result).toBeUndefined()
+    expect(result).toBe('mock read through cache method to be created and called')
   })
 
-  test('should throw when getCache throws', async () => {
+  test('should return undefined when getCache throws', async () => {
     getCache.mockImplementation(() => { throw new Error('Redis retreival error') })
-
-    const wrapper = async () => {
-      await get(request, key)
-    }
-
-    await expect(wrapper).rejects.toThrowError()
+    const result = await get(request, key)
+    await expect(result).toBeUndefined()
   })
 
-  test('should throw Error when getCache throws Error', async () => {
-    getCache.mockImplementation(() => { throw new Error('Redis retreival error') })
-
-    const wrapper = async () => {
-      await get(request, key)
-    }
-
-    await expect(wrapper).rejects.toThrowError(Error)
-  })
-
-  test('should throw "Redis retreival error" error when getCache throws "Redis retreival error" error', async () => {
-    getCache.mockImplementation(() => { throw new Error('Redis retreival error') })
-
-    const wrapper = async () => {
-      await get(request, key)
-    }
-
-    expect(wrapper).rejects.toThrowError(/^Redis retreival error$/)
-  })
-
-  test('should throw when getCacheValue throws', async () => {
+  test('should return undefined when getCacheValue throws', async () => {
     getCacheValue.mockRejectedValue(new Error('Redis retreival error'))
-
-    const wrapper = async () => {
-      await get(request, key)
-    }
-
-    expect(wrapper).rejects.toThrowError()
-  })
-
-  test('should throw Error when getCacheValue throws Error', async () => {
-    getCacheValue.mockRejectedValue(new Error('Redis retreival error'))
-
-    const wrapper = async () => {
-      await get(request, key)
-    }
-
-    expect(wrapper).rejects.toThrowError(Error)
-  })
-
-  test('should throw "Redis retreival error" error when getCacheValue throws "Redis retreival error" error', async () => {
-    getCacheValue.mockRejectedValue(new Error('Redis retreival error'))
-
-    const wrapper = async () => {
-      await get(request, key)
-    }
-
-    expect(wrapper).rejects.toThrowError(/^Redis retreival error$/)
+    const result = await get(request, key)
+    await expect(result).toBeUndefined()
   })
 })

@@ -8,6 +8,7 @@ const get = async (request, key) => {
       console.log('Using existing cache value')
       return res
     }
+    return 'mock read through cache method to be created and called'
   } catch {
     return undefined
   }

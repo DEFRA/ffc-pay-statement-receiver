@@ -12,19 +12,14 @@ const value = 'Value'
 let request
 
 beforeEach(async () => {
-  // clear cache
   request = { server: { app: { cache: 1 } } }
 
-  getCache.mockReturnValue(1)
-  setCacheValue.mockResolvedValue(1)
+  getCache.mockReturnValue(request.server.app.cache)
+  setCacheValue.mockResolvedValue(undefined)
 })
 
 afterEach(async () => {
   jest.resetAllMocks()
-})
-
-afterAll(async () => {
-  // clear cache
 })
 
 describe('set cache', () => {
