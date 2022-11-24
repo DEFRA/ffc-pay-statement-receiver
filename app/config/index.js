@@ -36,7 +36,9 @@ if (!value.useRedis) {
 value.cache = cacheConfig
 value.catboxOptions = {
   ...cacheConfig.catboxOptions,
-  tls: undefined
+  tls: value.isDev ? undefined : {}
 }
+
+console.log('port:', value.catboxOptions.port, 'tls:', value.catboxOptions.tls)
 
 module.exports = value

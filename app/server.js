@@ -10,7 +10,7 @@ const server = Hapi.server({
     name: config.cache.cacheName,
     provider: {
       constructor: catbox,
-      options: { ...config.catboxOptions, port: 6379 }
+      options: { ...config.catboxOptions }
     }
   }]
 })
