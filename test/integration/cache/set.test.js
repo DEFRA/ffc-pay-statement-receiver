@@ -83,15 +83,6 @@ describe('set cache', () => {
     expect(result).toBe(false)
   })
 
-  test('should not populate cache with undefined value', async () => {
-    value = undefined
-
-    await set(request, key, value)
-
-    const result = await getCacheValue(getCache(request), key)
-    expect(result).toBeNull()
-  })
-
   test('should not populate cache with null value', async () => {
     value = null
 
@@ -99,6 +90,17 @@ describe('set cache', () => {
 
     const result = await getCacheValue(getCache(request), key)
     expect(result).toBeNull()
+  })
+
+  test('should not populate cache with undefined value and throw when trying to retreive', async () => {
+    value = undefined
+
+    await set(request, key, value)
+
+    const wrapper = async () => {
+      await getCacheValue(getCache(request), key)
+    }
+    expect(wrapper).rejects.toThrowError()
   })
 
   test('should have cache value expire after config.cache.ttl has passed', async () => {
