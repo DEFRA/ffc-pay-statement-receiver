@@ -14,17 +14,13 @@ if (config.useConnectionStr) {
 
 const container = blobServiceClient.getContainerClient(config.container)
 
-
 const getFileStream = async (filename) => {
   const client = container.getBlockBlobClient(`${config.folder}/${filename}`)
-  console.log(client)
-
-
   try {
     return await client.download(0)
   } catch (err) {
     console.log(err)
-    throw new Error('File does not exist ' +  filename)
+    throw new Error(`${filename} does not exist`)
   }
 }
 
