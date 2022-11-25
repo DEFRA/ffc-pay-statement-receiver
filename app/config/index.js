@@ -31,14 +31,13 @@ if (!value.useRedis) {
   console.info('Redis disabled, using in memory cache')
 }
 
-const catboxOptions = config.useRedis ? config.catboxOptions : {}
-
 value.cache = cacheConfig
-value.catboxOptions = config.useRedis
+value.cache.catboxOptions = value.useRedis
   ? {
       ...cacheConfig.catboxOptions,
       tls: value.isDev ? undefined : {}
     }
   : {}
+value.cache.catbox = value.useRedis ? require('@hapi/catbox-redis') : require('@hapi/catbox-memory')
 
 module.exports = value
