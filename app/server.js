@@ -1,9 +1,8 @@
+require('./insights').setup()
+
 const Hapi = require('@hapi/hapi')
 const config = require('./config')
 const catbox = config.useRedis ? require('@hapi/catbox-redis') : require('@hapi/catbox-memory')
-const catboxOptions = config.useRedis ? config.catboxOptions : {}
-
-require('./insights').setup()
 
 const server = Hapi.server({
   port: process.env.PORT,
@@ -11,7 +10,7 @@ const server = Hapi.server({
     name: config.cache.cacheName,
     provider: {
       constructor: catbox,
-      options: catboxOptions
+      options: config.catboxOptions
     }
   }]
 })

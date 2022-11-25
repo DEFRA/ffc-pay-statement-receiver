@@ -31,10 +31,14 @@ if (!value.useRedis) {
   console.info('Redis disabled, using in memory cache')
 }
 
+const catboxOptions = config.useRedis ? config.catboxOptions : {}
+
 value.cache = cacheConfig
-value.catboxOptions = {
-  ...cacheConfig.catboxOptions,
-  tls: value.isDev ? undefined : {}
-}
+value.catboxOptions = config.useRedis
+  ? {
+      ...cacheConfig.catboxOptions,
+      tls: value.isDev ? undefined : {}
+    }
+  : {}
 
 module.exports = value
