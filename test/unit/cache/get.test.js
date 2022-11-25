@@ -11,10 +11,10 @@ const key = 'Key'
 let request
 
 beforeEach(async () => {
-  request = { server: { app: { cache: 1 } } }
+  request = { server: { app: { cache: { key: 1 } } } }
 
-  getCache.mockReturnValue(1)
-  getCacheValue.mockResolvedValue(1)
+  getCache.mockReturnValue(request.server.app.cache)
+  getCacheValue.mockResolvedValue(request.server.app.cache.key)
 })
 
 afterEach(async () => {
@@ -57,10 +57,10 @@ describe('get cache', () => {
     expect(result).toStrictEqual((await getCacheValue()))
   })
 
-  test('should return "mock read through cache method to be created and called" when getCacheValue returns null', async () => {
+  test('should return null when getCacheValue returns null', async () => {
     getCacheValue.mockResolvedValue(null)
     const result = await get(request, key)
-    expect(result).toBe('mock read through cache method to be created and called')
+    expect(result).toBeNull()
   })
 
   test('should return undefined when getCache throws', async () => {

@@ -1,5 +1,4 @@
 const config = require('../../../app/config')
-
 const server = require('../../../app/server')
 
 const getCache = require('../../../app/cache/get-cache')
@@ -32,9 +31,9 @@ describe('get cache object', () => {
     expect(result).toStrictEqual(request.server.app.cache)
   })
 
-  test('should return rule.expiresIn as 9999', async () => {
+  test('should return rule.expiresIn as config.cache.ttl', async () => {
     const result = await getCache(request)
-    expect(result.rule.expiresIn).toBe(9999)
+    expect(result.rule.expiresIn).toBe(config.cache.ttl)
   })
 
   test('should return ttl() as config.cache.ttl', async () => {

@@ -3,13 +3,9 @@ const getCacheValue = require('./get-cache-value')
 
 const get = async (request, key) => {
   try {
-    const res = await getCacheValue(getCache(request), key)
-    if (res) {
-      console.log('Using existing cache value')
-      return res
-    }
-    return 'mock read through cache method to be created and called'
+    return await getCacheValue(getCache(request), key)
   } catch {
+    console.error(`Cannot get cache value for key: ${key}`)
     return undefined
   }
 }

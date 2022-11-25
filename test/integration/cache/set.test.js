@@ -1,7 +1,9 @@
 const config = require('../../../app/config')
 const server = require('../../../app/server')
 
-const { get, set } = require('../../../app/cache')
+const { set, drop } = require('../../../app/cache')
+const getCache = require('../../../app/cache/get-cache')
+const getCacheValue = require('../../../app/cache/get-cache-value')
 
 let key
 let value
@@ -21,93 +23,94 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
+  await drop(request, key)
   jest.resetAllMocks()
 })
 
 describe('set cache', () => {
-  test('GET /set route should return undefined', async () => {
+  test('should return undefined', async () => {
     const result = await set(request, key, value)
     expect(result).toBeUndefined()
   })
 
-  test('GET /set route should populate cache with key', async () => {
+  test('should populate cache with key', async () => {
     await set(request, key, value)
 
-    const result = await get(request, key)
+    const result = await getCacheValue(getCache(request), key)
     expect(result).toBeDefined()
   })
 
-  test('GET /set route should populate cache with value', async () => {
+  test('should populate cache with value', async () => {
     await set(request, key, value)
 
-    const result = await get(request, key)
+    const result = await getCacheValue(getCache(request), key)
     expect(result).toBe(value)
   })
 
-  test('GET /set route should populate cache with empty array value', async () => {
+  test('should populate cache with empty array value', async () => {
     value = []
 
     await set(request, key, value)
 
-    const result = await get(request, key)
+    const result = await getCacheValue(getCache(request), key)
     expect(result).toStrictEqual(value)
   })
 
-  test('GET /set route should populate cache with empty object value', async () => {
+  test('should populate cache with empty object value', async () => {
     value = {}
 
     await set(request, key, value)
 
-    const result = await get(request, key)
+    const result = await getCacheValue(getCache(request), key)
     expect(result).toStrictEqual(value)
   })
 
-  test('GET /set route should populate cache with true value', async () => {
+  test('should populate cache with true value', async () => {
     value = true
 
     await set(request, key, value)
 
-    const result = await get(request, key)
-    expect(result).toStrictEqual(value)
+    const result = await getCacheValue(getCache(request), key)
+    expect(result).toBe(value)
   })
 
-  test('GET /set route should not populate cache with undefined value', async () => {
-    value = undefined
-
-    await set(request, key, value)
-
-    const result = await get(request, key)
-    expect(result).toBeUndefined()
-  })
-
-  test('GET /set route should not populate cache with null value', async () => {
-    value = null
-
-    await set(request, key, value)
-
-    const result = await get(request, key)
-    expect(result).toBe('mock read through cache method to be created and called')
-  })
-
-  test('GET /set route should not populate cache with false value', async () => {
+  test('should populate cache with false value', async () => {
     value = false
 
     await set(request, key, value)
 
-    const result = await get(request, key)
-    expect(result).toBe('mock read through cache method to be created and called')
+    const result = await getCacheValue(getCache(request), key)
+    expect(result).toBe(false)
   })
 
-  test('GET /set route should have cache value expire after config.cache.ttl has passed', async () => {
+  test('should not populate cache with undefined value', async () => {
+    value = undefined
+
     await set(request, key, value)
 
-    const beforeTtlTimeout = await get(request, key)
+    const result = await getCacheValue(getCache(request), key)
+    expect(result).toBeNull()
+  })
+
+  test('should not populate cache with null value', async () => {
+    value = null
+
+    await set(request, key, value)
+
+    const result = await getCacheValue(getCache(request), key)
+    expect(result).toBeNull()
+  })
+
+  test('should have cache value expire after config.cache.ttl has passed', async () => {
+    await set(request, key, value)
+
+    const beforeTtlTimeout = await getCacheValue(getCache(request), key)
 
     jest.useFakeTimers()
     jest.setSystemTime(new Date(new Date().getTime() + config.cache.ttl + 999))
-    const afterTtlTimeout = await get(request, key)
+    const afterTtlTimeout = await getCacheValue(getCache(request), key)
 
     expect(beforeTtlTimeout).toBe(value)
-    expect(afterTtlTimeout).toBe('mock read through cache method to be created and called')
+    expect(afterTtlTimeout).toBeNull()
   })
 })
