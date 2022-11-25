@@ -7,10 +7,9 @@ const schema = Joi.object({
   port: Joi.number().integer().default(6379),
   password: Joi.string().allow(''),
   partition: Joi.string().default('ffc-pay-statement-receiver'),
-  ttl: Joi.number().integer().default(TTL),
-  cacheName: Joi.string().default('statements')
-//   staticCacheTimeoutMillis: Joi.number().default(15 * 60 * 1000),
-//   restClientTimeoutMillis: Joi.number().default(20000),
+  cacheName: Joi.string().default('statements'),
+  segment: Joi.string().default('statements'),
+  ttl: Joi.number().integer().default(TTL)
 })
 
 const config = {
@@ -18,8 +17,9 @@ const config = {
   port: process.env.REDIS_PORT,
   password: process.env.REDIS_PASSWORD,
   partition: process.env.REDIS_PARTITION,
-  ttl: process.env.REDIS_TTL,
-  cacheName: process.env.REDIS_CACHE_NAME
+  cacheName: process.env.REDIS_CACHE_NAME,
+  segment: process.env.REDIS_STATEMENT_SEGMENT,
+  ttl: process.env.REDIS_TTL
 }
 
 const result = schema.validate(config, {

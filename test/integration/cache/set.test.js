@@ -107,7 +107,7 @@ describe('set cache', () => {
     jest.setSystemTime(new Date(new Date().getTime() + config.cache.ttl + 999))
     const afterTtlTimeout = await get(request, key)
 
-    expect(beforeTtlTimeout).toBeDefined()
+    expect(beforeTtlTimeout).toBe(value)
     expect(afterTtlTimeout).toBe('mock read through cache method to be created and called')
   })
 })
