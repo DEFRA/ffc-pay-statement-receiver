@@ -2,7 +2,7 @@ services:
   ffc-pay-statement-receiver:
     build:
       context: .
-      target: development
+      target: production
     image: ffc-pay-statement-receiver
     container_name: ffc-pay-statement-receiver
     environment:
