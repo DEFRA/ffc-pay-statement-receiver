@@ -9,6 +9,10 @@ Optional:
 - Kubernetes
 - Helm
 
+## Api contracts
+
+All api contracts are fully documented in an [OpenAPI specification](docs/openapi.yaml).
+
 ## Running the application
 
 The application is designed to run in containerised environments, using Docker Compose in development and Kubernetes in production.
@@ -38,7 +42,7 @@ docker-compose build
 Use Docker Compose to run service locally.
 
 ```
-docker-compose up
+./scripts/start
 ```
 
 ## Test structure

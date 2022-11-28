@@ -7,7 +7,7 @@ module.exports = {
     const filename = request.params.filename
 
     if (!filename) {
-      return h.response('no_filename').code(404)
+      return h.response('no_filename').code(400)
     }
 
     try {
