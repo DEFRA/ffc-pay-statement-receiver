@@ -7,6 +7,8 @@ services:
       target: development
     image: ffc-pay-statement-receiver-development
     container_name: ffc-pay-statement-receiver-test
+    depends_on:
+      - ffc-pay-statement-receiver-redis
     command: npm run test
     volumes:
       - ./app:/home/node/app
@@ -14,3 +16,13 @@ services:
       - ./test-output:/home/node/test-output
       - ./jest.config.js:/home/node/jest.config.js
       - ./package.json:/home/node/package.json
+
+  ffc-pay-statement-receiver-redis:
+    ports:
+        - "6378:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --dir /data --save 5 1
+
+volumes:
+  redis_data:
