@@ -40,3 +40,8 @@ readinessProbe:
   initialDelaySeconds: 10
   periodSeconds: 10
   failureThreshold: 3
+
+ingress:
+  class: nginx
+  endpoint: ffc-pay-statement-receiver
+  server: example.com
