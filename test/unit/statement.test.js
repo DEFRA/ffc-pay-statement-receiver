@@ -1,7 +1,5 @@
-let mockDownload
-let mockUpload
-let createServer
-let server
+const createServer = require('../../app/server')
+
 jest.mock('@azure/storage-blob', () => {
   return {
     BlobServiceClient: {
@@ -24,11 +22,14 @@ jest.mock('@azure/storage-blob', () => {
   }
 })
 
+let mockDownload
+let mockUpload
+let server
+
 describe('Report test', () => {
   const FILENAME = 'FFC_PaymentStatement_SFI_2022_1234567890_2022080515301012.pdf'
 
   beforeEach(async () => {
-    createServer = require('../../app/server')
     server = await createServer()
     mockDownload = jest.fn().mockReturnValue({
       readableStreamBody: 'Statement content'
