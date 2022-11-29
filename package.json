@@ -15,17 +15,19 @@
   },
   "author": "Defra",
   "contributors": [
-    "Abidemi Adio abidemi.adio@defra.gov.uk"
+    "Abidemi Adio abidemi.adio@defra.gov.uk",
+    "Marc Templeton m.templeton@kainos.com"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/identity": "2.0.5",
     "@azure/storage-blob": "12.10.0",
     "@hapi/boom": "10.0.0",
+    "@hapi/catbox-redis": "6.0.2",
     "@hapi/hapi": "20.2.2",
     "hapi-pino": "10.1.0",
-    "applicationinsights": "2.3.3",
-    "joi": "17.6.0"
+    "applicationinsights": "2.3.5",
+    "joi": "17.7.0"
   },
   "devDependencies": {
     "blipp": "4.0.2",

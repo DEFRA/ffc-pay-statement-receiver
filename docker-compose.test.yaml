@@ -7,6 +7,8 @@ services:
       target: development
     image: ffc-pay-statement-receiver-development
     container_name: ffc-pay-statement-receiver-test
+    depends_on:
+      - ffc-pay-statement-receiver-redis
     command: npm run test
     volumes:
       - ./app:/home/node/app

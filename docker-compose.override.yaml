@@ -7,19 +7,31 @@ services:
       target: development
     image: ffc-pay-statement-receiver-development
     container_name: ffc-pay-statement-receiver-development
+    depends_on:
+      - ffc-pay-statement-receiver-redis
     ports:
-      - "3000:3000"
-      - "9229:9229"
+      - "3021:3000"
+      - "9234:9229"
     volumes:
       - ./app:/home/node/app
       - ./package.json:/home/node/package.json
     environment:
       AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://ffc-pay-statement-azurite:10000/devstoreaccount1;
+
   ffc-pay-statement-azurite:
     volumes:
       - azurite_data:/data
     ports:
       - "10057:10000"
+
+  ffc-pay-statement-receiver-redis:
+    ports:
+      - "6378:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --dir /data --save 5 1
+
 volumes:
   azurite_data:
   postgres_data:
+  redis_data:

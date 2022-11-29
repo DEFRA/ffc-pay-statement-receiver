@@ -1,3 +1,5 @@
+require('./insights').setup()
+
 const hapi = require('@hapi/hapi')
 const config = require('./config')
 
@@ -5,18 +7,16 @@ async function createServer () {
   // Create the hapi server
   const server = hapi.server({
     port: config.port,
-    routes: {
-      validate: {
-        options: {
-          abortEarly: false
-        }
+    cache: [{
+      name: config.cache.cacheName,
+      provider: {
+        constructor: config.cache.catbox,
+        options: config.cache.catboxOptions
       }
-    },
-    router: {
-      stripTrailingSlash: true
-    }
+    }]
   })
-
+  const cache = server.cache({ cache: config.cache.cacheName, segment: config.cache.segment, expiresIn: config.cache.ttl })
+  server.app.cache = cache
   // Register the plugins
   await server.register(require('./plugins/errors'))
   await server.register(require('./plugins/router'))

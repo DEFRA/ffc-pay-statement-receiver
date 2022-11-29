@@ -1,3 +1,4 @@
+const cacheConfig = require('./cache')
 const joi = require('joi')
 const storageConfig = require('./storage')
 
@@ -9,7 +10,8 @@ const schema = joi.object({
 
 // Build config
 const config = {
-  env: process.env.NODE_ENV
+  env: process.env.NODE_ENV,
+  port: process.env.PORT
 }
 
 // Validate config
@@ -25,10 +27,25 @@ if (result.error) {
 // Use the joi validated value
 const value = result.value
 
-value.isDev = value.env === 'development'
+value.isDev = (value.env === 'development' || value.env === 'test')
 value.isTest = value.env === 'test'
 value.isProd = value.env === 'production'
 
 value.storageConfig = storageConfig
+
+value.useRedis = !(value.isTest || cacheConfig.host === undefined)
+
+if (!value.useRedis) {
+  console.info('Redis disabled, using in memory cache')
+}
+
+value.cache = cacheConfig
+value.cache.catboxOptions = value.useRedis
+  ? {
+      ...cacheConfig.catboxOptions,
+      tls: value.isDev ? undefined : {}
+    }
+  : {}
+value.cache.catbox = value.useRedis ? require('@hapi/catbox-redis') : require('@hapi/catbox-memory')
 
 module.exports = value
