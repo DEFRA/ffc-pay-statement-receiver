@@ -26,6 +26,12 @@ container:
   limitMemory: 100Mi
   limitCpu: 100m
   port: 3000
+  azureStorageAccountName: ffcpay
+  azureStorageConnectionString: dummy
+  azureStorageUseConnectionString: false
+  azureStorageCreateContainers: false
+  storageContainer: statements
+  storageFolder: outbound
   redisHostname: hosty-mchost-face
   redisPort: 9999
   redisPassword: redis
@@ -48,3 +54,9 @@ readinessProbe:
   initialDelaySeconds: 10
   periodSeconds: 10
   failureThreshold: 3
+
+aadPodIdentity: true
+
+azureIdentity:
+  clientID: not-a-real-clientID
+  resourceID: not-a-real-resourceID

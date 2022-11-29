@@ -1,29 +1,37 @@
-const Joi = require('joi')
 const cacheConfig = require('./cache')
+const joi = require('joi')
+const storageConfig = require('./storage')
 
-const schema = Joi.object({
-  port: Joi.number().integer().default(3000),
-  env: Joi.string().valid('development', 'test', 'production').default('development')
+// Define config schema
+const schema = joi.object({
+  env: joi.string().valid('development', 'test', 'production').default('development'),
+  port: joi.number().default(3000)
 })
 
+// Build config
 const config = {
-  port: process.env.PORT,
-  env: process.env.NODE_ENV
+  env: process.env.NODE_ENV,
+  port: process.env.PORT
 }
 
+// Validate config
 const result = schema.validate(config, {
   abortEarly: false
 })
 
+// Throw if config is invalid
 if (result.error) {
   throw new Error(`The server config is invalid. ${result.error.message}`)
 }
 
+// Use the joi validated value
 const value = result.value
 
 value.isDev = (value.env === 'development' || value.env === 'test')
 value.isTest = value.env === 'test'
 value.isProd = value.env === 'production'
+
+value.storageConfig = storageConfig
 
 value.useRedis = !(value.isTest || cacheConfig.host === undefined)
 

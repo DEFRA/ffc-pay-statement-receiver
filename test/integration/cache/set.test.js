@@ -1,5 +1,5 @@
 const config = require('../../../app/config')
-const server = require('../../../app/server')
+const createServer = require('../../../app/server')
 
 const { set, drop } = require('../../../app/cache')
 const getCache = require('../../../app/cache/get-cache')
@@ -8,8 +8,10 @@ const getCacheValue = require('../../../app/cache/get-cache-value')
 let key
 let value
 let request
+let server
 
 beforeEach(async () => {
+  server = await createServer()
   await server.initialize()
 
   const options = {

@@ -5,11 +5,21 @@ services:
       target: production
     image: ffc-pay-statement-receiver
     container_name: ffc-pay-statement-receiver
+    depends_on:
+      - ffc-pay-statement-azurite
     environment:
       APPINSIGHTS_CLOUDROLE: ffc-pay-statement-receiver-local
       APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}
+      AZURE_STORAGE_ACCOUNT_NAME: ${AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
+      AZURE_STORAGE_USE_CONNECTION_STRING: "true"
       REDIS_HOSTNAME: ffc-pay-statement-receiver-redis
       REDIS_PASSWORD: redis
+
+  ffc-pay-statement-azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.17.1
+    command: "azurite-blob --loose --blobHost 0.0.0.0"
+    labels:
+      com.docker.compose.pay.role: ffc-pay-statement-azurite
 
   ffc-pay-statement-receiver-redis:
     image: redis:6.2.7

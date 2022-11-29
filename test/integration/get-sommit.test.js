@@ -1,4 +1,4 @@
-const server = require('../../app/server')
+const createServer = require('../../app/server')
 
 const { set } = require('../../app/cache')
 const getSommit = require('../../app/get-sommit')
@@ -7,8 +7,10 @@ const value = 'Value'
 
 let key
 let request
+let server
 
 beforeEach(async () => {
+  server = await createServer()
   await server.initialize()
 
   const options = {

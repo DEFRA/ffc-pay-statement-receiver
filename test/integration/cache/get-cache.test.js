@@ -1,11 +1,13 @@
 const config = require('../../../app/config')
-const server = require('../../../app/server')
+const createServer = require('../../../app/server')
 
 const getCache = require('../../../app/cache/get-cache')
 
 let request
+let server
 
 beforeEach(async () => {
+  server = await createServer()
   await server.initialize()
 
   const options = {
