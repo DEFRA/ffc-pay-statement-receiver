@@ -4,11 +4,6 @@ data:
   NODE_ENV: {{ quote .Values.environment }}
   PORT: {{ quote .Values.container.port }}
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
-  {{- if and (.Values.environmentCode) (not .Values.pr) }}
-  STATEMENTS_RECEIVER_ENDPOINT: {{ .Values.container.statementsEndpoint }}-{{ .Values.environmentCode }}
-  {{ else }}
-  STATEMENTS_RECEIVER_ENDPOINT: {{ quote .Values.container.statementsEndpoint }}
-  {{- end }}
   AZURE_STORAGE_ACCOUNT_NAME: {{ quote .Values.container.azureStorageAccountName }}
   AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.azureStorageConnectionString }}
   AZURE_STORAGE_USE_CONNECTION_STRING: {{ quote .Values.container.azureStorageUseConnectionString }}

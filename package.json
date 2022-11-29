@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-statement-receiver",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Statement API",
   "homepage": "https://github.com/DEFRA/ffc-pay-statement-receiver",
   "main": "app/index.js",
@@ -21,11 +21,14 @@
   "dependencies": {
     "@azure/identity": "2.0.5",
     "@azure/storage-blob": "12.10.0",
+    "@hapi/boom": "10.0.0",
     "@hapi/hapi": "20.2.2",
+    "hapi-pino": "10.1.0",
     "applicationinsights": "2.3.3",
     "joi": "17.6.0"
   },
   "devDependencies": {
+    "blipp": "4.0.2",
     "jest": "28.1.2",
     "jest-junit": "14.0.0",
     "nodemon": "2.0.19",

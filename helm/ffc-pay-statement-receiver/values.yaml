@@ -26,7 +26,6 @@ container:
   limitMemory: 100Mi
   limitCpu: 100m
   port: 3000
-  statementsEndpoint: http://ffc-pay-statement-receiver.ffc-pay
   azureStorageAccountName: ffcpay
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false
@@ -47,6 +46,8 @@ readinessProbe:
   initialDelaySeconds: 10
   periodSeconds: 10
   failureThreshold: 3
+
+aadPodIdentity: true
 
 azureIdentity:
   clientID: not-a-real-clientID

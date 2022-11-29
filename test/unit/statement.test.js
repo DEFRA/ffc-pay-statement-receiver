@@ -1,4 +1,7 @@
 let mockDownload
+let mockUpload
+let createServer
+let server
 jest.mock('@azure/storage-blob', () => {
   return {
     BlobServiceClient: {
@@ -9,7 +12,8 @@ jest.mock('@azure/storage-blob', () => {
               createIfNotExists: jest.fn(),
               getBlockBlobClient: jest.fn().mockImplementation(() => {
                 return {
-                  download: mockDownload
+                  download: mockDownload,
+                  upload: mockUpload
                 }
               })
             }
@@ -21,14 +25,15 @@ jest.mock('@azure/storage-blob', () => {
 })
 
 describe('Report test', () => {
-  const server = require('../../app/server')
   const FILENAME = 'FFC_PaymentStatement_SFI_2022_1234567890_2022080515301012.pdf'
 
   beforeEach(async () => {
+    createServer = require('../../app/server')
+    server = await createServer()
     mockDownload = jest.fn().mockReturnValue({
       readableStreamBody: 'Statement content'
     })
-
+    mockUpload = jest.fn().mockReturnValue(undefined)
     await server.initialize()
   })
 
@@ -57,7 +62,7 @@ describe('Report test', () => {
     }
 
     const response = await server.inject(options)
-    expect(response.payload).toBe(`${FILENAME} does not exist`)
+    expect(response.result.message).toBe(`${FILENAME} does not exist`)
   })
 
   test('GET /statement/{version}/{filename} route returns statusCode 404 if no filename provided', async () => {
