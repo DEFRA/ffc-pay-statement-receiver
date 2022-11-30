@@ -26,6 +26,20 @@ container:
   limitMemory: 100Mi
   limitCpu: 100m
   port: 3000
+  azureStorageAccountName: ffcpay
+  azureStorageConnectionString: dummy
+  azureStorageUseConnectionString: false
+  azureStorageCreateContainers: false
+  storageContainer: statements
+  storageFolder: outbound
+  redisHostname: hosty-mchost-face
+  redisPort: 9999
+  redisPassword: redis
+
+ingress:
+  class: nginx
+  endpoint: ffc-pay-statement-receiver
+  server: example.com
 
 livenessProbe:
   path: /healthz
@@ -41,11 +55,8 @@ readinessProbe:
   periodSeconds: 10
   failureThreshold: 3
 
-ingress:
-  class: nginx
-  endpoint: ffc-pay-statement-receiver
-  server: example.com
+aadPodIdentity: true
 
-service:
-  port: 80
-  type: ClusterIP
+azureIdentity:
+  clientID: not-a-real-clientID
+  resourceID: not-a-real-resourceID
