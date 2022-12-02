@@ -26,19 +26,16 @@ let mockDownload
 let mockUpload
 let server
 
-const startServer = async () => {
-  server = await createServer()
-  await server.initialize()
-}
-
 describe('Report test', () => {
   const FILENAME = 'FFC_PaymentStatement_SFI_2022_1234567890_2022080515301012.pdf'
 
   beforeEach(async () => {
+    server = await createServer()
     mockDownload = jest.fn().mockReturnValue({
       readableStreamBody: 'Statement content'
     })
     mockUpload = jest.fn().mockReturnValue(undefined)
+    await server.initialize()
   })
 
   afterEach(async () => {
@@ -47,7 +44,6 @@ describe('Report test', () => {
   })
 
   test('GET /statement/{version}/{filename}  route returns response status code 200 if statement available', async () => {
-    await startServer()
     const options = {
       method: 'GET',
       url: `/statement/v1/${FILENAME}`
@@ -59,7 +55,6 @@ describe('Report test', () => {
   })
 
   test('GET /statement/{version}/{filename} route returns file does not exist message stream if statement not available', async () => {
-    await startServer()
     mockDownload = jest.fn().mockReturnValue(undefined)
     await server.initialize()
     const options = {
@@ -72,7 +67,6 @@ describe('Report test', () => {
   })
 
   test('GET /statement/{version}/{filename} route returns statusCode 404 if no filename provided', async () => {
-    await startServer()
     mockDownload = jest.fn().mockReturnValue(undefined)
     await server.initialize()
     const options = {
