@@ -6,7 +6,7 @@ const storageConfig = require('./storage')
 const schema = joi.object({
   env: joi.string().valid('development', 'test', 'production').default('development'),
   port: joi.number().default(3021),
-  endpointEnabled: joi.boolean().default(true)
+  endpointEnabled: joi.boolean().default(false)
 })
 
 // Build config

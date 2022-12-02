@@ -5,7 +5,7 @@ module.exports = {
     name: 'enabled',
     register: (server) => {
       server.ext('onRequest', (request, h) => {
-        if (!endpointEnabled) {
+        if (!endpointEnabled && request.path.startsWith('/statement/')) {
           return h.response('Service is intentionally disabled in this environment').code(503).takeover()
         }
         return h.continue
