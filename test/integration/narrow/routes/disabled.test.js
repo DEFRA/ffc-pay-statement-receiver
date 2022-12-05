@@ -1,10 +1,11 @@
 const config = require('../../../../app/config')
-config.endpointEnabled = false
-const createServer = require('../../../../app/server')
+let createServer
 let server
 
 describe('Disabled endpoint', () => {
   beforeEach(async () => {
+    config.endpointEnabled = false
+    createServer = require('../../../../app/server')
     server = await createServer()
     await server.initialize()
   })
