@@ -1,4 +1,4 @@
-const createServer = require('../../app/server')
+const createServer = require('../../../../app/server')
 
 jest.mock('@azure/storage-blob', () => {
   return {

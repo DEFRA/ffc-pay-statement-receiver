@@ -10,7 +10,7 @@ services:
     depends_on:
       - ffc-pay-statement-receiver-redis
     ports:
-      - "3021:3000"
+      - "3021:3021"
       - "9234:9229"
     volumes:
       - ./app:/home/node/app
