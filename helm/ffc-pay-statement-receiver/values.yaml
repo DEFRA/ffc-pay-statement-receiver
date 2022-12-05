@@ -35,7 +35,7 @@ container:
   redisHostname: hosty-mchost-face
   redisPort: 9999
   redisPassword: redis
-  endpointEnabled: false
+  endpointEnabled: true
 
 ingress:
   class: nginx
