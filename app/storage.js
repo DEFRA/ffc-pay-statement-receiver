@@ -34,7 +34,7 @@ const getFileStream = async (filename) => {
   containersInitialised ?? await initialiseContainers()
   const client = container.getBlockBlobClient(`${config.folder}/${filename}`)
   try {
-    return await client.download(0)
+    return await client.download()
   } catch (err) {
     throw new Error(`${filename} does not exist`)
   }

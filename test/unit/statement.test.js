@@ -43,7 +43,7 @@ describe('Report test', () => {
     jest.resetAllMocks()
   })
 
-  test('GET /statement/{version}/{filename}  route returns response status code 200 if statement available', async () => {
+  test('GET /statement/{version}/{filename} route returns response status code 200 if statement available', async () => {
     const options = {
       method: 'GET',
       url: `/statement/v1/${FILENAME}`
@@ -63,7 +63,7 @@ describe('Report test', () => {
     }
 
     const response = await server.inject(options)
-    expect(response.result.message).toBe(`${FILENAME} does not exist`)
+    expect(response.result).toBe(`${FILENAME} does not exist`)
   })
 
   test('GET /statement/{version}/{filename} route returns statusCode 404 if no filename provided', async () => {
