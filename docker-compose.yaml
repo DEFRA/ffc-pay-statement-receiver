@@ -14,6 +14,7 @@ services:
       AZURE_STORAGE_USE_CONNECTION_STRING: "true"
       REDIS_HOSTNAME: ffc-pay-statement-receiver-redis
       REDIS_PASSWORD: redis
+      PORT: 3021
 
   ffc-pay-statement-azurite:
     image: mcr.microsoft.com/azure-storage/azurite:3.17.1

@@ -1,7 +1,7 @@
-const createServer = require('../../app/server')
+const createServer = require('../../../../app/server')
 
-const { set } = require('../../app/cache')
-const getSommit = require('../../app/get-sommit')
+const { set } = require('../../../../app/cache')
+const getSommit = require('../../../../app/get-sommit')
 
 const value = 'Value'
 

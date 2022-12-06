@@ -18,6 +18,7 @@ async function createServer () {
   const cache = server.cache({ cache: config.cache.cacheName, segment: config.cache.segment, expiresIn: config.cache.ttl })
   server.app.cache = cache
   // Register the plugins
+  await server.register(require('./plugins/enabled'))
   await server.register(require('./plugins/errors'))
   await server.register(require('./plugins/router'))
   await server.register(require('./plugins/logging'))
