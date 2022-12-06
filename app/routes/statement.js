@@ -4,7 +4,7 @@ const boom = require('@hapi/boom')
 const { getFileStream } = require('../storage')
 const { get, set } = require('../cache')
 
-const streamToBuffer = require('../stream')
+const streamToBuffer = require('../stream-to-buffer')
 
 module.exports = {
   method: 'GET',
