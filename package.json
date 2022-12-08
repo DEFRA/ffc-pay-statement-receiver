@@ -1,22 +1,23 @@
 {
   "name": "ffc-pay-statement-receiver",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Statement API",
   "homepage": "https://github.com/DEFRA/ffc-pay-statement-receiver",
   "main": "app/index.js",
   "scripts": {
     "pretest": "npm run test:lint",
     "test": "jest --runInBand --forceExit",
-    "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
+    "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand test/integration/narrow/routes/statement.test.js",
     "test:lint": "standard",
-    "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js --coverage=false --onlyChanged --watch --runInBand --no-cache",
-    "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch app/index.js test/unit/stream-to-buffer.test.js",
+    "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js --coverage=false --onlyChanged --watch --runInBand --no-cache test/integration/narrow/routes/test.test.js",
+    "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch app/index.js",
     "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch app/index.js"
   },
   "author": "Defra",
   "contributors": [
     "Abidemi Adio abidemi.adio@defra.gov.uk",
-    "Marc Templeton m.templeton@kainos.com"
+    "Marc Templeton m.templeton@kainos.com",
+    "Simon Dunn simon.dunn1@defra.gov.uk"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {

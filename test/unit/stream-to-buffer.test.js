@@ -5,9 +5,6 @@ const streamToBuffer = require('../../app/stream-to-buffer')
 let streamData
 let readableStream
 
-// getFileStream prob doesn't need a unit test file becuase it's very Azure heavy
-// testing it in integration tests (i.e. statements) is good enough
-
 describe('readable stream contents is converted to an int Buffer', () => {
   beforeEach(async () => {
     streamData = ['pure', 'gubbins', 'to', 'be', 'refined']
@@ -18,16 +15,15 @@ describe('readable stream contents is converted to an int Buffer', () => {
     jest.resetAllMocks()
   })
 
-  test('should return an instance of a Buffer when valid StreamData provided', async () => {
+  test('should return an instance of a Buffer when valid streamData provided', async () => {
     const result = await streamToBuffer(readableStream)
-    expect(result).toBeInstanceOf(Buffer) // what should this actually return, probs a Buffer of everything in streamData
+    expect(result).toBeInstanceOf(Buffer)
   })
 
-  // test('should return a Buffer of streamData', async () => {
-  //   const result = await streamToBuffer(readableStream)
-  //   expect(result).toBe(Buffer.from(readableStream))
-  //   // How can I check this returns a Buffer of streamData without repeating the functionality of the stream-to-buffer function
-  // })
+  test('should return a Buffer of streamData contents', async () => {
+    const result = await streamToBuffer(readableStream)
+    expect(result).toStrictEqual(Buffer.from(streamData.join('')))
+  })
 
   test('should return an instance of a Buffer when readableFlowing is set to null', async () => {
     readableStream.readableFlowing = null
@@ -35,41 +31,107 @@ describe('readable stream contents is converted to an int Buffer', () => {
     expect(result).toBeInstanceOf(Buffer)
   })
 
-  // test('should return an instance of a Buffer when readableFlowing is set to true', async () => {
-  //   readableStream.readableFlowing = true
-  //   const result = await streamToBuffer(readableStream)
-  //   expect(result).toBeInstanceOf(Buffer)
-  // })
+  test('should return an instance of a Buffer when readableStream is created from empty array', async () => {
+    readableStream = Readable.from([], { encoding: 'utf8' })
+    const result = await streamToBuffer(readableStream)
+    expect(result).toBeInstanceOf(Buffer)
+  })
 
-  test('should reject to a TypeError when streamToBuffer is called with an array', async () => {
+  test('should return a Buffer of empty array when readableStream is created from empty array', async () => {
+    readableStream = Readable.from([], { encoding: 'utf8' })
+    const result = await streamToBuffer(readableStream)
+    expect(result).toStrictEqual(Buffer.from([]))
+  })
+
+  test('should reject when streamToBuffer is called with an array', async () => {
     readableStream = []
-    try {
+
+    const wrapper = async () => {
       await streamToBuffer(readableStream)
-    } catch (err) {
-      expect(err).toBeInstanceOf(TypeError)
     }
+
+    expect(wrapper).rejects.toThrow()
   })
 
-  test('should reject to a TypeError when streamToBuffer is called with a string', async () => {
+  test('should reject to a Error when streamToBuffer is called with an array', async () => {
+    readableStream = []
+
+    const wrapper = async () => {
+      await streamToBuffer(readableStream)
+    }
+
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should reject with error "readableStream.on is not a function" when streamToBuffer is called with an array', async () => {
+    readableStream = []
+
+    const wrapper = async () => {
+      await streamToBuffer(readableStream)
+    }
+
+    expect(wrapper).rejects.toThrow(/^readableStream.on is not a function$/)
+  })
+
+  test('should reject when streamToBuffer is called with a string', async () => {
     readableStream = 'string'
-    try {
+
+    const wrapper = async () => {
       await streamToBuffer(readableStream)
-    } catch (err) {
-      expect(err).toBeInstanceOf(TypeError)
     }
+
+    expect(wrapper).rejects.toThrow()
   })
 
-  test('should reject to a TypeError when streamToBuffer is called with a object', async () => {
+  test('should reject to a Error when streamToBuffer is called with a string', async () => {
+    readableStream = 'string'
+
+    const wrapper = async () => {
+      await streamToBuffer(readableStream)
+    }
+
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should reject with error "readableStream.on is not a function" when streamToBuffer is called with a string', async () => {
+    readableStream = 'string'
+
+    const wrapper = async () => {
+      await streamToBuffer(readableStream)
+    }
+
+    expect(wrapper).rejects.toThrow(/^readableStream.on is not a function$/)
+  })
+
+  test('should reject when streamToBuffer is called with an object', async () => {
     readableStream = { key: 'value' }
-    try {
+
+    const wrapper = async () => {
       await streamToBuffer(readableStream)
-    } catch (err) {
-      expect(err).toBeInstanceOf(TypeError)
     }
+
+    expect(wrapper).rejects.toThrow()
   })
 
-  // what forms can readableStream take? (check the docs) 'flowing' and 'paused'? or readableFlowing true, false, null
-  // based off this, what happens if readableStream is in each of these states?
+  test('should reject to a Error when streamToBuffer is called with an object', async () => {
+    readableStream = { key: 'value' }
+
+    const wrapper = async () => {
+      await streamToBuffer(readableStream)
+    }
+
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should reject with error "readableStream.on is not a function" when streamToBuffer is called with an object', async () => {
+    readableStream = { key: 'value' }
+
+    const wrapper = async () => {
+      await streamToBuffer(readableStream)
+    }
+
+    expect(wrapper).rejects.toThrow(/^readableStream.on is not a function$/)
+  })
+
   // i.e. what if readableStream is empty? what if we add to readableStream partway through?
-  // what if this function gets a wrong input type, i.e. [], {}, 'stream', etc
 })
