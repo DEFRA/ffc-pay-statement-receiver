@@ -27,7 +27,6 @@ module.exports = {
 
         return h.response(Buffer.from(cachedFile))
           .type('application/pdf')
-          .header('Connection', 'keep-alive')
           .header('Content-Disposition', `attachment;filename=${filename}`)
           .code(200)
       }
