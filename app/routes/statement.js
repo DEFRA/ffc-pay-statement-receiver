@@ -1,25 +1,23 @@
 const boom = require('@hapi/boom')
-const schema = require('./schemas/statement')
 
 const { getFileStream } = require('../storage')
 const { get, set } = require('../cache')
 
 const streamToBuffer = require('../stream-to-buffer')
 
+const schema = require('./schemas/statement')
+
 module.exports = {
   method: 'GET',
   path: '/statement/{version}/{filename}',
   options: {
     validate: {
-      params: schema
-    },
-    response: {
+      params: schema,
       failAction: async (request, h, error) => {
-        boom.badRequest(error)
+        return boom.badRequest(error)
       }
     }
   },
-
   handler: async (request, h) => {
     const filename = request.params.filename
 
@@ -51,5 +49,4 @@ module.exports = {
       return boom.badRequest(err)
     }
   }
-
 }

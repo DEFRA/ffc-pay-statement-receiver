@@ -7,7 +7,7 @@ jest.mock('@azure/storage-blob', () => {
           getContainerClient: jest.fn().mockImplementation(() => {
             return {
               createIfNotExists: jest.fn(),
-              getBlockBlobClient: jest.fn().mockImplementation(() => { // undefined
+              getBlockBlobClient: jest.fn().mockImplementation(() => {
                 return {
                   download: mockDownload,
                   upload: jest.fn()
@@ -123,7 +123,7 @@ describe('Report test', () => {
     expect(response.headers['cache-control']).toBe('no-cache')
   })
 
-  test('should return payload as streamContent', async () => {
+  test('should return result as streamContent', async () => {
     const options = {
       method: 'GET',
       url: `/statement/v1/${filename}`
@@ -131,7 +131,7 @@ describe('Report test', () => {
 
     const response = await server.inject(options)
 
-    expect(response.payload).toBe(streamContent)
+    expect(response.result).toBe(streamContent)
   })
 
   test('should return response status code 400 when storage cannot retreive file', async () => {
@@ -146,7 +146,7 @@ describe('Report test', () => {
     expect(response.statusCode).toBe(400)
   })
 
-  test('should return response status message "filename does not exist" when storage cannot retreive file', async () => {
+  test('should return response result message "filename does not exist" when storage cannot retreive file', async () => {
     mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
     const options = {
       method: 'GET',
@@ -155,7 +155,7 @@ describe('Report test', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusMessage).toBe(`${filename} does not exist`)
+    expect(response.result.message).toBe(`${filename} does not exist`)
   })
 
   test('should return response status code 200 when filename exists in cache', async () => {
@@ -194,7 +194,7 @@ describe('Report test', () => {
     expect(response.headers['content-disposition']).toBe(`attachment;filename=${filename}`)
   })
 
-  test('should return payload as streamContent when filename exists in cache', async () => {
+  test('should return result as streamContent when filename exists in cache', async () => {
     set(request, filename, Buffer.from(streamContent))
     const options = {
       method: 'GET',
@@ -203,12 +203,11 @@ describe('Report test', () => {
 
     const response = await server.inject(options)
 
-    expect(response.payload).toBe(streamContent)
+    expect(response.result).toBe(streamContent)
   })
 
-  // TODO: Simon failover handler
-  test('should return status code 404 if filename is not provided', async () => {
-    filename = ''
+  test('should return status code 400 if filename does not end in .pdf', async () => {
+    filename = 'notValidFilename'
     const options = {
       method: 'GET',
       url: `/statement/v1/${filename}`
@@ -216,6 +215,18 @@ describe('Report test', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).toBe(404)
+    expect(response.statusCode).toBe(400)
+  })
+
+  test('should return result message "Filename must end in .pdf" if filename does not end in .pdf', async () => {
+    filename = 'notValidFilename'
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.result.message).toBe('Filename must end in .pdf')
   })
 })
