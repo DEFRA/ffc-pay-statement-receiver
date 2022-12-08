@@ -1,4 +1,4 @@
-const mockDownload = jest.fn(() => { return 1 })
+const mockDownload = jest.fn()
 jest.mock('@azure/storage-blob', () => {
   return {
     BlobServiceClient: {
@@ -25,35 +25,53 @@ const { Readable } = require('stream')
 
 const createServer = require('../../../../app/server')
 
-const { get, drop } = require('../../../../app/cache')
+const { get, drop, set } = require('../../../../app/cache')
 
 let server
 let request
 
-describe('Report test', () => {
-  const FILENAME = 'FFC_PaymentStatement_SFI_2022_1234567890_2022080515301012.pdf'
+let filename
+let streamContent
 
+describe('Report test', () => {
   beforeEach(async () => {
     server = await createServer()
-    // mockDownload.mockResolvedValue({
-    //   readableStreamBody: Readable.from(['Statement', 'content'], { encoding: 'utf8' })
-    // })
-    await server.initialize()
-
     request = { server: { app: { cache: server.app.cache } } }
-    await drop(request, FILENAME)
+
+    filename = 'FFC_PaymentStatement_SFI_2022_1234567890_1.pdf'
+    streamContent = 'Statement content'
+
+    mockDownload.mockResolvedValue({
+      readableStreamBody: Readable.from(streamContent, { encoding: 'utf8' })
+    })
+
+    await server.initialize()
+    await drop(request, filename)
   })
 
   afterEach(async () => {
-    await drop(request, FILENAME)
+    await drop(request, filename)
     await server.stop()
-    jest.resetAllMocks()
+  })
+
+  test('should set cache for filename', async () => {
+    const cacheForFilenameBefore = await get(request, filename)
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
+
+    await server.inject(options)
+
+    const cacheForFilenameAfter = await get(request, filename)
+    expect(cacheForFilenameBefore).toBeNull()
+    expect(cacheForFilenameAfter).toBeDefined()
   })
 
   test('should return response status code 200', async () => {
     const options = {
       method: 'GET',
-      url: `/statement/v1/${FILENAME}`
+      url: `/statement/v1/${filename}`
     }
 
     const response = await server.inject(options)
@@ -61,11 +79,90 @@ describe('Report test', () => {
     expect(response.statusCode).toBe(200)
   })
 
-  // test that response has fileBuffer
-  test('should return response.sommit to be some Buffer thing', async () => {
+  test('should return content type as pdf', async () => {
     const options = {
       method: 'GET',
-      url: `/statement/v1/${FILENAME}`
+      url: `/statement/v1/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.headers['content-type']).toBe('application/pdf')
+  })
+
+  test('should return content disposition header as attachment of the filename', async () => {
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.headers['content-disposition']).toBe(`attachment;filename=${filename}`)
+  })
+
+  test('should return connection header as keep-alive', async () => {
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.headers.connection).toBe('keep-alive')
+  })
+
+  test('should return cache control header as no', async () => {
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.headers['cache-control']).toBe('no-cache')
+  })
+
+  test('should return payload as streamContent', async () => {
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.payload).toBe(streamContent)
+  })
+
+  test('should return response status code 400 when storage cannot retreive file', async () => {
+    mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(400)
+  })
+
+  test('should return response status message "filename does not exist" when storage cannot retreive file', async () => {
+    mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusMessage).toBe(`${filename} does not exist`)
+  })
+
+  test('should return response status code 200 when filename exists in cache', async () => {
+    set(request, filename, Buffer.from(streamContent))
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
     }
 
     const response = await server.inject(options)
@@ -73,52 +170,52 @@ describe('Report test', () => {
     expect(response.statusCode).toBe(200)
   })
 
-  // test('should set cache for FILENAME', async () => {
-  //   const cacheForFilenameBefore = await get(request, FILENAME)
-  //   const options = {
-  //     method: 'GET',
-  //     url: `/statement/v1/${FILENAME}`
-  //   }
+  test('should return content type as pdf when filename exists in cache', async () => {
+    set(request, filename, Buffer.from(streamContent))
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
 
-  //   await server.inject(options)
+    const response = await server.inject(options)
 
-  //   const cacheForFilenameAfter = await get(request, FILENAME)
-  //   expect(cacheForFilenameBefore).toBeNull()
-  //   expect(cacheForFilenameAfter).toBeDefined()
-  // })
+    expect(response.headers['content-type']).toBe('application/pdf')
+  })
 
-  // test('GET /statement/{version}/{filename} route returns response status code 200 if statement not available', async () => {
-  //   mockDownload = jest.fn().mockReturnValue(undefined)
-  //   const options = {
-  //     method: 'GET',
-  //     url: `/statement/v1/${FILENAME}`
-  //   }
+  test('should return content disposition header as attachment of the filename when filename exists in cache', async () => {
+    set(request, filename, Buffer.from(streamContent))
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
 
-  //   const response = await server.inject(options)
-  //   expect(response.statusCode).toBe(200)
-  // })
+    const response = await server.inject(options)
 
-  // test('GET /statement/{version}/{filename} route returns file does not exist message stream if statement not available', async () => {
-  //   mockDownload = jest.fn().mockReturnValue(undefined)
-  //   await server.initialize()
-  //   const options = {
-  //     method: 'GET',
-  //     url: `/statement/v1/${FILENAME}`
-  //   }
+    expect(response.headers['content-disposition']).toBe(`attachment;filename=${filename}`)
+  })
 
-  //   const response = await server.inject(options)
-  //   expect(response.result.message).toBe(`${FILENAME} does not exist`)
-  // })
+  test('should return payload as streamContent when filename exists in cache', async () => {
+    set(request, filename, Buffer.from(streamContent))
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
 
-  // test('GET /statement/{version}/{filename} route returns statusCode 404 if no filename provided', async () => {
-  //   mockDownload = jest.fn().mockReturnValue(undefined)
-  //   await server.initialize()
-  //   const options = {
-  //     method: 'GET',
-  //     url: '/statement/v1/'
-  //   }
+    const response = await server.inject(options)
 
-  //   const response = await server.inject(options)
-  //   expect(response.statusCode).toBe(404)
-  // })
+    expect(response.payload).toBe(streamContent)
+  })
+
+  // TODO: Simon failover handler
+  test('should return status code 404 if filename is not provided', async () => {
+    filename = ''
+    const options = {
+      method: 'GET',
+      url: `/statement/v1/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(404)
+  })
 })
