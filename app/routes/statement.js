@@ -12,6 +12,11 @@ module.exports = {
   options: {
     validate: {
       params: schema
+    },
+    response: {
+      failAction: async (request, h, error) => {
+        boom.badRequest(error)
+      }
     }
   },
 
