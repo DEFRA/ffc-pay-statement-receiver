@@ -227,6 +227,6 @@ describe('Report test', () => {
 
     const response = await server.inject(options)
 
-    expect(response.result.message).toBe('Filename must end in .pdf')
+    expect(response.result.message).toBe('"filename" with value "notValidFilename" fails to match the required pattern: /^\\w+\\.pdf$/')
   })
 })
