@@ -7,7 +7,8 @@ const streamToBuffer = async (readableStream) => {
       chunks.push(data instanceof Buffer ? data : Buffer.from(data))
     })
     readableStream.on('end', () => {
-      resolve(Buffer.concat(chunks))
+      const c = Buffer.concat(chunks)
+      resolve(c)
     })
     readableStream.on('error', reject)
   })
