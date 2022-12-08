@@ -132,6 +132,4 @@ describe('readable stream contents is converted to an int Buffer', () => {
 
     expect(wrapper).rejects.toThrow(/^readableStream.on is not a function$/)
   })
-
-  // i.e. what if readableStream is empty? what if we add to readableStream partway through?
 })
