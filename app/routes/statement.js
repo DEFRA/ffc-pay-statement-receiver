@@ -1,5 +1,5 @@
-const joi = require('joi')
 const boom = require('@hapi/boom')
+const schema = require('./schemas/statement')
 
 const { getFileStream } = require('../storage')
 const { get, set } = require('../cache')
@@ -11,12 +11,10 @@ module.exports = {
   path: '/statement/{version}/{filename}',
   options: {
     validate: {
-      params: joi.object({
-        version: joi.string(),
-        filename: joi.string().required()
-      })
+      params: schema
     }
   },
+
   handler: async (request, h) => {
     const filename = request.params.filename
 
@@ -49,4 +47,5 @@ module.exports = {
       return boom.badRequest(err)
     }
   }
+
 }
