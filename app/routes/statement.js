@@ -1,4 +1,4 @@
-const boom = require('@hapi/boom')
+const Boom = require('@hapi/boom')
 
 const { getFileStream } = require('../storage')
 const { get, set } = require('../cache')
@@ -14,7 +14,7 @@ module.exports = {
     validate: {
       params: schema,
       failAction: async (request, h, error) => {
-        return boom.badRequest(error)
+        return Boom.badRequest(error)
       }
     }
   },
@@ -46,7 +46,7 @@ module.exports = {
         .header('Content-Disposition', `attachment;filename=${filename}`)
         .code(200)
     } catch (err) {
-      return boom.badRequest(err)
+      return Boom.badRequest(err)
     }
   }
 }
