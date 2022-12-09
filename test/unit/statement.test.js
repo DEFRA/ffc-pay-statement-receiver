@@ -13,7 +13,7 @@ let filename
 let fileContent
 let server
 
-describe('Report test', () => {
+describe('Statement route', () => {
   beforeEach(async () => {
     filename = 'FFC_PaymentStatement_SFI_2022_1234567890_2022080515301012.pdf'
     fileContent = 'Statement content'
