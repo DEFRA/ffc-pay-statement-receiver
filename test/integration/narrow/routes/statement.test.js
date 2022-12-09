@@ -33,7 +33,7 @@ let request
 let filename
 let streamContent
 
-describe('Report test', () => {
+describe('Statement route', () => {
   beforeEach(async () => {
     server = await createServer()
     request = { server: { app: { cache: server.app.cache } } }
