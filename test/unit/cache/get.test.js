@@ -11,7 +11,7 @@ const key = 'Key'
 let request
 
 beforeEach(async () => {
-  request = { server: { app: { cache: { key: 1 } } } }
+  request = require('../../mock-components/request')
 
   getCache.mockReturnValue(request.server.app.cache)
   getCacheValue.mockResolvedValue(request.server.app.cache.key)

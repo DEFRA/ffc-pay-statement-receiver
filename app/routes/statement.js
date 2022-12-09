@@ -1,11 +1,8 @@
 const Boom = require('@hapi/boom')
 
-const { getFileStream } = require('../storage')
-const { get, set } = require('../cache')
-
-const streamToBuffer = require('../stream-to-buffer')
-
 const schema = require('./schemas/statement')
+
+const getReadThroughStatement = require('../statement')
 
 module.exports = {
   method: 'GET',
@@ -22,24 +19,9 @@ module.exports = {
     const filename = request.params.filename
 
     try {
-      const cachedFile = await get(request, filename)
-      if (cachedFile) {
-        console.log(`Cached file found for: ${filename}`)
+      const statement = await getReadThroughStatement(request, request.params.filename)
 
-        return h.response(Buffer.from(cachedFile))
-          .type('application/pdf')
-          .header('Content-Disposition', `attachment;filename=${filename}`)
-          .code(200)
-      }
-
-      console.log('No cached file found, retrieving from storage')
-
-      const fileStream = await getFileStream(filename)
-      const fileBuffer = await streamToBuffer(fileStream.readableStreamBody)
-
-      await set(request, filename, fileBuffer)
-
-      return h.response(fileBuffer)
+      return h.response(statement)
         .type('application/pdf')
         .header('Connection', 'keep-alive')
         .header('Cache-Control', 'no-cache')

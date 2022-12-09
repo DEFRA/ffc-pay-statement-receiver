@@ -25,24 +25,24 @@ const { Readable } = require('stream')
 
 const createServer = require('../../../../app/server')
 
-const { get, drop, set } = require('../../../../app/cache')
+const { get, set, drop } = require('../../../../app/cache')
 
 let server
 let request
 
 let filename
-let streamContent
+let fileContent
 
 describe('Statement route', () => {
   beforeEach(async () => {
     server = await createServer()
     request = { server: { app: { cache: server.app.cache } } }
 
-    filename = 'FFC_PaymentStatement_SFI_2022_1234567890_1.pdf'
-    streamContent = 'Statement content'
+    filename = require('../../../mock-components/filename')
+    fileContent = require('../../../mock-components/file-content')
 
     mockDownload.mockResolvedValue({
-      readableStreamBody: Readable.from(streamContent, { encoding: 'utf8' })
+      readableStreamBody: Readable.from(fileContent, { encoding: 'utf8' })
     })
 
     await server.initialize()
@@ -123,7 +123,7 @@ describe('Statement route', () => {
     expect(response.headers['cache-control']).toBe('no-cache')
   })
 
-  test('should return result as streamContent', async () => {
+  test('should return result as fileContent', async () => {
     const options = {
       method: 'GET',
       url: `/statement/v1/${filename}`
@@ -131,7 +131,7 @@ describe('Statement route', () => {
 
     const response = await server.inject(options)
 
-    expect(response.result).toBe(streamContent)
+    expect(response.result).toBe(fileContent)
   })
 
   test('should return response status code 400 when storage cannot retreive file', async () => {
@@ -159,7 +159,7 @@ describe('Statement route', () => {
   })
 
   test('should return response status code 200 when filename exists in cache', async () => {
-    set(request, filename, Buffer.from(streamContent))
+    set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
       url: `/statement/v1/${filename}`
@@ -171,7 +171,7 @@ describe('Statement route', () => {
   })
 
   test('should return content type as pdf when filename exists in cache', async () => {
-    set(request, filename, Buffer.from(streamContent))
+    set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
       url: `/statement/v1/${filename}`
@@ -183,7 +183,7 @@ describe('Statement route', () => {
   })
 
   test('should return content disposition header as attachment of the filename when filename exists in cache', async () => {
-    set(request, filename, Buffer.from(streamContent))
+    set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
       url: `/statement/v1/${filename}`
@@ -194,8 +194,8 @@ describe('Statement route', () => {
     expect(response.headers['content-disposition']).toBe(`attachment;filename=${filename}`)
   })
 
-  test('should return result as streamContent when filename exists in cache', async () => {
-    set(request, filename, Buffer.from(streamContent))
+  test('should return result as fileContent when filename exists in cache', async () => {
+    set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
       url: `/statement/v1/${filename}`
@@ -203,7 +203,7 @@ describe('Statement route', () => {
 
     const response = await server.inject(options)
 
-    expect(response.result).toBe(streamContent)
+    expect(response.result).toBe(fileContent)
   })
 
   test('should return status code 404 if filename does not end in .pdf', async () => {
