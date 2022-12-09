@@ -218,7 +218,7 @@ describe('Report test', () => {
     expect(response.statusCode).toBe(400)
   })
 
-  test('should return result message "Filename must end in .pdf" if filename does not end in .pdf', async () => {
+  test('should return result message "Filename does not match the regular expression pattern of: /^\\w+\\.pdf$/." if filename does not end in .pdf', async () => {
     filename = 'notValidFilename'
     const options = {
       method: 'GET',
@@ -227,6 +227,6 @@ describe('Report test', () => {
 
     const response = await server.inject(options)
 
-    expect(response.result.message).toBe('"filename" with value "notValidFilename" fails to match the required pattern: /^\\w+\\.pdf$/')
+    expect(response.result.message).toBe('Filename does not match the regular expression pattern of: /^\\w+\\.pdf$/.')
   })
 })
