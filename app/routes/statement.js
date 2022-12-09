@@ -6,7 +6,7 @@ const getReadThroughStatement = require('../statement')
 
 module.exports = {
   method: 'GET',
-  path: '/statement/{version}/{filename}',
+  path: '/{version}/statements/statement/{filename}',
   options: {
     validate: {
       params: schema,
@@ -16,10 +16,9 @@ module.exports = {
     }
   },
   handler: async (request, h) => {
-    const filename = request.params.filename
-
     try {
-      const statement = await getReadThroughStatement(request, request.params.filename)
+      const filename = request.params.filename
+      const statement = await getReadThroughStatement(request, filename)
 
       return h.response(statement)
         .type('application/pdf')

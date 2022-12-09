@@ -27,8 +27,11 @@ const createServer = require('../../../../app/server')
 
 const { get, set, drop } = require('../../../../app/cache')
 
+const apiVersions = require('../../../../app/constants/api-versions')
+
 let server
 let request
+let version
 
 let filename
 let fileContent
@@ -37,6 +40,7 @@ describe('Statement route', () => {
   beforeEach(async () => {
     server = await createServer()
     request = { server: { app: { cache: server.app.cache } } }
+    version = require('../../../mock-components/version')
 
     filename = require('../../../mock-components/filename')
     fileContent = require('../../../mock-components/file-content')
@@ -58,7 +62,7 @@ describe('Statement route', () => {
     const cacheForFilenameBefore = await get(request, filename)
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     await server.inject(options)
@@ -71,7 +75,7 @@ describe('Statement route', () => {
   test('should return response status code 200', async () => {
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -82,7 +86,7 @@ describe('Statement route', () => {
   test('should return content type as pdf', async () => {
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -93,7 +97,7 @@ describe('Statement route', () => {
   test('should return content disposition header as attachment of the filename', async () => {
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -104,7 +108,7 @@ describe('Statement route', () => {
   test('should return connection header as keep-alive', async () => {
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -115,7 +119,7 @@ describe('Statement route', () => {
   test('should return cache control header as no', async () => {
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -126,7 +130,7 @@ describe('Statement route', () => {
   test('should return result as fileContent', async () => {
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -138,7 +142,7 @@ describe('Statement route', () => {
     mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -150,7 +154,7 @@ describe('Statement route', () => {
     mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -162,7 +166,7 @@ describe('Statement route', () => {
     set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -174,7 +178,7 @@ describe('Statement route', () => {
     set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -186,7 +190,7 @@ describe('Statement route', () => {
     set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -198,7 +202,7 @@ describe('Statement route', () => {
     set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -206,11 +210,35 @@ describe('Statement route', () => {
     expect(response.result).toBe(fileContent)
   })
 
+  test('should return status code 404 if version is a valid one', async () => {
+    version = 'notValidVersion'
+    const options = {
+      method: 'GET',
+      url: `/${version}/statements/statement/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(404)
+  })
+
+  test('should return result message starts "Version must be one of:" if version is a valid one', async () => {
+    version = 'notValidVersion'
+    const options = {
+      method: 'GET',
+      url: `/${version}/statements/statement/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.result.message).toBe(`Version must be one of: ${apiVersions}.`)
+  })
+
   test('should return status code 404 if filename does not end in .pdf', async () => {
     filename = 'notValidFilename'
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
@@ -222,7 +250,7 @@ describe('Statement route', () => {
     filename = 'notValidFilename'
     const options = {
       method: 'GET',
-      url: `/statement/v1/${filename}`
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
