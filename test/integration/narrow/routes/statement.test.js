@@ -206,7 +206,7 @@ describe('Statement route', () => {
     expect(response.result).toBe(streamContent)
   })
 
-  test('should return status code 400 if filename does not end in .pdf', async () => {
+  test('should return status code 404 if filename does not end in .pdf', async () => {
     filename = 'notValidFilename'
     const options = {
       method: 'GET',
@@ -215,7 +215,7 @@ describe('Statement route', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).toBe(400)
+    expect(response.statusCode).toBe(404)
   })
 
   test('should return result message "Filename must end in .pdf." if filename does not end in .pdf', async () => {

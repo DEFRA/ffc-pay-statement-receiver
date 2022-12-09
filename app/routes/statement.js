@@ -14,7 +14,7 @@ module.exports = {
     validate: {
       params: schema,
       failAction: async (request, h, error) => {
-        return Boom.badRequest(error)
+        return Boom.notFound(error)
       }
     }
   },
