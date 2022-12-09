@@ -6,4 +6,4 @@ const filename = require('./filename')
 module.exports = Joi.object({
   ...version,
   ...filename
-})
+}).required()
