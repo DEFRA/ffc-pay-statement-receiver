@@ -11,7 +11,7 @@ module.exports = {
     validate: {
       params: schema,
       failAction: async (request, h, error) => {
-        return Boom.notFound(error)
+        return Boom.badRequest(error)
       }
     }
   },
@@ -26,8 +26,8 @@ module.exports = {
         .header('Cache-Control', 'no-cache')
         .header('Content-Disposition', `attachment;filename=${filename}`)
         .code(200)
-    } catch (err) {
-      return Boom.badRequest(err)
+    } catch (error) {
+      return Boom.notFound(error)
     }
   }
 }

@@ -58,7 +58,7 @@ describe('Statement route', () => {
     await server.stop()
   })
 
-  test('should set cache for filename', async () => {
+  test('GET /{version}/statements/statement/{filename} route should set cache for filename', async () => {
     const cacheForFilenameBefore = await get(request, filename)
     const options = {
       method: 'GET',
@@ -72,7 +72,7 @@ describe('Statement route', () => {
     expect(cacheForFilenameAfter).toBeDefined()
   })
 
-  test('should return response status code 200', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return response status code 200', async () => {
     const options = {
       method: 'GET',
       url: `/${version}/statements/statement/${filename}`
@@ -83,7 +83,7 @@ describe('Statement route', () => {
     expect(response.statusCode).toBe(200)
   })
 
-  test('should return content type as pdf', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return content type as pdf', async () => {
     const options = {
       method: 'GET',
       url: `/${version}/statements/statement/${filename}`
@@ -94,7 +94,7 @@ describe('Statement route', () => {
     expect(response.headers['content-type']).toBe('application/pdf')
   })
 
-  test('should return content disposition header as attachment of the filename', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return content disposition header as attachment of the filename', async () => {
     const options = {
       method: 'GET',
       url: `/${version}/statements/statement/${filename}`
@@ -105,7 +105,7 @@ describe('Statement route', () => {
     expect(response.headers['content-disposition']).toBe(`attachment;filename=${filename}`)
   })
 
-  test('should return connection header as keep-alive', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return connection header as keep-alive', async () => {
     const options = {
       method: 'GET',
       url: `/${version}/statements/statement/${filename}`
@@ -116,7 +116,7 @@ describe('Statement route', () => {
     expect(response.headers.connection).toBe('keep-alive')
   })
 
-  test('should return cache control header as no', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return cache control header as no', async () => {
     const options = {
       method: 'GET',
       url: `/${version}/statements/statement/${filename}`
@@ -127,7 +127,7 @@ describe('Statement route', () => {
     expect(response.headers['cache-control']).toBe('no-cache')
   })
 
-  test('should return result as fileContent', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return result as fileContent', async () => {
     const options = {
       method: 'GET',
       url: `/${version}/statements/statement/${filename}`
@@ -138,7 +138,7 @@ describe('Statement route', () => {
     expect(response.result).toBe(fileContent)
   })
 
-  test('should return response status code 400 when storage cannot retreive file', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return response status code 404 when storage cannot retreive file', async () => {
     mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
     const options = {
       method: 'GET',
@@ -147,10 +147,10 @@ describe('Statement route', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).toBe(400)
+    expect(response.statusCode).toBe(404)
   })
 
-  test('should return response result message "filename does not exist" when storage cannot retreive file', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return response result message "filename does not exist" when storage cannot retreive file', async () => {
     mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
     const options = {
       method: 'GET',
@@ -162,7 +162,7 @@ describe('Statement route', () => {
     expect(response.result.message).toBe(`${filename} does not exist`)
   })
 
-  test('should return response status code 200 when filename exists in cache', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return response status code 200 when filename exists in cache', async () => {
     set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
@@ -174,7 +174,7 @@ describe('Statement route', () => {
     expect(response.statusCode).toBe(200)
   })
 
-  test('should return content type as pdf when filename exists in cache', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return content type as pdf when filename exists in cache', async () => {
     set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
@@ -186,7 +186,7 @@ describe('Statement route', () => {
     expect(response.headers['content-type']).toBe('application/pdf')
   })
 
-  test('should return content disposition header as attachment of the filename when filename exists in cache', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return content disposition header as attachment of the filename when filename exists in cache', async () => {
     set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
@@ -198,7 +198,7 @@ describe('Statement route', () => {
     expect(response.headers['content-disposition']).toBe(`attachment;filename=${filename}`)
   })
 
-  test('should return result as fileContent when filename exists in cache', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return result as fileContent when filename exists in cache', async () => {
     set(request, filename, Buffer.from(fileContent))
     const options = {
       method: 'GET',
@@ -210,7 +210,7 @@ describe('Statement route', () => {
     expect(response.result).toBe(fileContent)
   })
 
-  test('should return status code 404 if version is a valid one', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return status code 400 if version is a valid one', async () => {
     version = 'notValidVersion'
     const options = {
       method: 'GET',
@@ -219,10 +219,10 @@ describe('Statement route', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).toBe(404)
+    expect(response.statusCode).toBe(400)
   })
 
-  test('should return result message starts "Version must be one of:" if version is a valid one', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return result message starts "Version must be one of:" if version is a valid one', async () => {
     version = 'notValidVersion'
     const options = {
       method: 'GET',
@@ -234,7 +234,7 @@ describe('Statement route', () => {
     expect(response.result.message).toBe(`Version must be one of: ${apiVersions}.`)
   })
 
-  test('should return status code 404 if filename does not end in .pdf', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return status code 400 if filename does not end in .pdf', async () => {
     filename = 'notValidFilename'
     const options = {
       method: 'GET',
@@ -243,10 +243,10 @@ describe('Statement route', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).toBe(404)
+    expect(response.statusCode).toBe(400)
   })
 
-  test('should return result message "Filename must end in .pdf." if filename does not end in .pdf', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return result message "Filename must end in .pdf." if filename does not end in .pdf', async () => {
     filename = 'notValidFilename'
     const options = {
       method: 'GET',
