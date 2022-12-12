@@ -138,30 +138,6 @@ describe('Statement route', () => {
     expect(response.result).toBe(fileContent)
   })
 
-  test('GET /{version}/statements/statement/{filename} route should return response status code 404 when storage cannot retreive file', async () => {
-    mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
-    const options = {
-      method: 'GET',
-      url: `/${version}/statements/statement/${filename}`
-    }
-
-    const response = await server.inject(options)
-
-    expect(response.statusCode).toBe(404)
-  })
-
-  test('GET /{version}/statements/statement/{filename} route should return response result message "filename does not exist" when storage cannot retreive file', async () => {
-    mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
-    const options = {
-      method: 'GET',
-      url: `/${version}/statements/statement/${filename}`
-    }
-
-    const response = await server.inject(options)
-
-    expect(response.result.message).toBe(`${filename} does not exist`)
-  })
-
   test('GET /{version}/statements/statement/{filename} route should return response status code 200 when filename exists in cache', async () => {
     set(request, filename, Buffer.from(fileContent))
     const options = {
@@ -210,7 +186,7 @@ describe('Statement route', () => {
     expect(response.result).toBe(fileContent)
   })
 
-  test('GET /{version}/statements/statement/{filename} route should return status code 400 if version is a valid one', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return status code 400 if version is not a valid one', async () => {
     version = 'notValidVersion'
     const options = {
       method: 'GET',
@@ -222,7 +198,7 @@ describe('Statement route', () => {
     expect(response.statusCode).toBe(400)
   })
 
-  test('GET /{version}/statements/statement/{filename} route should return result message starts "Version must be one of:" if version is a valid one', async () => {
+  test('GET /{version}/statements/statement/{filename} route should return result message "Version must be one of: apiVersions" if version is not a valid one', async () => {
     version = 'notValidVersion'
     const options = {
       method: 'GET',
@@ -256,5 +232,57 @@ describe('Statement route', () => {
     const response = await server.inject(options)
 
     expect(response.result.message).toBe('Filename must end in .pdf.')
+  })
+
+  test('GET /{version}/statements/statement/{filename} route should return response status code 404 when storage cannot retreive file', async () => {
+    mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
+    const options = {
+      method: 'GET',
+      url: `/${version}/statements/statement/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(404)
+  })
+
+  test('GET /{version}/statements/statement/{filename} route should return response result message "filename does not exist" when storage cannot retreive file', async () => {
+    mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
+    const options = {
+      method: 'GET',
+      url: `/${version}/statements/statement/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.result.message).toBe(`${filename} does not exist`)
+  })
+
+  test('GET /{version}/statements/statement/{filename} route should return response status code 200 when storage returns empty string', async () => {
+    mockDownload.mockResolvedValue({
+      readableStreamBody: Readable.from('', { encoding: 'utf8' })
+    })
+    const options = {
+      method: 'GET',
+      url: `/${version}/statements/statement/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(200)
+  })
+
+  test('GET /{version}/statements/statement/{filename} route should return response status code 200 when storage returns empty array', async () => {
+    mockDownload.mockResolvedValue({
+      readableStreamBody: Readable.from([], { encoding: 'utf8' })
+    })
+    const options = {
+      method: 'GET',
+      url: `/${version}/statements/statement/${filename}`
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(200)
   })
 })
