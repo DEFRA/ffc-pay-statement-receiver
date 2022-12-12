@@ -1,11 +1,9 @@
 const Joi = require('joi')
 
-const filenameRegex = require('../../constants/filename-regex')
-
 module.exports = {
-  filename: Joi.string().pattern(filenameRegex).required()
+  filename: Joi.string().required()
     .messages({
-      'string.pattern.base': 'Filename must end in .pdf.',
+      'string.base': 'Filename must be a string.',
       'any.required': 'A filename must be provided.'
     })
 }

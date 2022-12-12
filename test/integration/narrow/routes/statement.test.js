@@ -210,30 +210,6 @@ describe('Statement route', () => {
     expect(response.result.message).toBe(`Version must be one of: ${apiVersions}.`)
   })
 
-  test('GET /{version}/statements/statement/{filename} route should return status code 400 if filename does not end in .pdf', async () => {
-    filename = 'notValidFilename'
-    const options = {
-      method: 'GET',
-      url: `/${version}/statements/statement/${filename}`
-    }
-
-    const response = await server.inject(options)
-
-    expect(response.statusCode).toBe(400)
-  })
-
-  test('GET /{version}/statements/statement/{filename} route should return result message "Filename must end in .pdf." if filename does not end in .pdf', async () => {
-    filename = 'notValidFilename'
-    const options = {
-      method: 'GET',
-      url: `/${version}/statements/statement/${filename}`
-    }
-
-    const response = await server.inject(options)
-
-    expect(response.result.message).toBe('Filename must end in .pdf.')
-  })
-
   test('GET /{version}/statements/statement/{filename} route should return response status code 404 when storage cannot retreive file', async () => {
     mockDownload.mockRejectedValue(new Error('Blob storage retreival issue'))
     const options = {
