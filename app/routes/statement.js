@@ -1,31 +1,33 @@
-const { getFileStream } = require('../storage')
-const joi = require('joi')
-const boom = require('@hapi/boom')
+const Boom = require('@hapi/boom')
+
+const schema = require('./schemas/statement')
+
+const getReadThroughStatement = require('../statement')
 
 module.exports = {
   method: 'GET',
-  path: '/statement/{version}/{filename}',
+  path: '/{version}/statements/statement/{filename}',
+  options: {
+    validate: {
+      params: schema,
+      failAction: async (request, h, error) => {
+        return Boom.badRequest(error)
+      }
+    }
+  },
   handler: async (request, h) => {
-    const filename = request.params.filename
-
     try {
-      const statementFile = await getFileStream(filename)
-      return h.response(statementFile.readableStreamBody)
+      const filename = request.params.filename
+      const statement = await getReadThroughStatement(request, filename)
+
+      return h.response(statement)
         .type('application/pdf')
         .header('Connection', 'keep-alive')
         .header('Cache-Control', 'no-cache')
         .header('Content-Disposition', `attachment;filename=${filename}`)
         .code(200)
-    } catch (err) {
-      return boom.badRequest(err)
-    }
-  },
-  options: {
-    validate: {
-      params: joi.object({
-        version: joi.string(),
-        filename: joi.string().required()
-      })
+    } catch (error) {
+      return Boom.notFound(error)
     }
   }
 }

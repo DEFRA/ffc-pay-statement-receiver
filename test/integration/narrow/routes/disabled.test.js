@@ -1,6 +1,10 @@
 const config = require('../../../../app/config')
+
 let createServer
 let server
+
+let version
+let filename
 
 describe('Disabled endpoint', () => {
   beforeEach(async () => {
@@ -8,26 +12,29 @@ describe('Disabled endpoint', () => {
     createServer = require('../../../../app/server')
     server = await createServer()
     await server.initialize()
+
+    version = require('../../../mock-components/version')
+    filename = require('../../../mock-components/filename')
   })
 
   afterEach(async () => {
     await server.stop()
   })
 
-  test('GET /statement/{version}/{filename} route returns 503 if endpoint disabled', async () => {
+  test('GET /{version}/statements/statement/{filename} route returns 503 if endpoint disabled', async () => {
     const options = {
       method: 'GET',
-      url: '/statement/v1/FFC_PaymentStatement_SFI_2022_1234567890_2022080515301012.pdf'
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)
     expect(response.statusCode).toBe(503)
   })
 
-  test('GET /statement/{version}/{filename} route returns disabled message if endpoint disabled', async () => {
+  test('GET /{version}/statements/statement/{filename} route returns disabled message if endpoint disabled', async () => {
     const options = {
       method: 'GET',
-      url: '/statement/v1/FFC_PaymentStatement_SFI_2022_1234567890_2022080515301012.pdf'
+      url: `/${version}/statements/statement/${filename}`
     }
 
     const response = await server.inject(options)

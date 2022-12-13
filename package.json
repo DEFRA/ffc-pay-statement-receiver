@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-statement-receiver",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Statement API",
   "homepage": "https://github.com/DEFRA/ffc-pay-statement-receiver",
   "main": "app/index.js",
@@ -16,7 +16,8 @@
   "author": "Defra",
   "contributors": [
     "Abidemi Adio abidemi.adio@defra.gov.uk",
-    "Marc Templeton m.templeton@kainos.com"
+    "Marc Templeton m.templeton@kainos.com",
+    "Simon Dunn simon.dunn1@defra.gov.uk"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {

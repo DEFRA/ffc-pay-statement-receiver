@@ -12,7 +12,7 @@ const value = 'Value'
 let request
 
 beforeEach(async () => {
-  request = { server: { app: { cache: { key: 1 } } } }
+  request = require('../../mock-components/request')
 
   getCache.mockReturnValue(request.server.app.cache)
   setCacheValue.mockResolvedValue(undefined)
