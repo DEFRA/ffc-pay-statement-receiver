@@ -45,16 +45,18 @@ ingress:
 livenessProbe:
   path: /healthz
   port: 3021
-  initialDelaySeconds: 10
+  initialDelaySeconds: 30
   periodSeconds: 10
   failureThreshold: 3
+  timeoutSeconds: 5
 
 readinessProbe:
   path: /healthy
   port: 3021
-  initialDelaySeconds: 10
+  initialDelaySeconds: 40
   periodSeconds: 10
   failureThreshold: 3
+  timeoutSeconds: 5
 
 aadPodIdentity: true
 
